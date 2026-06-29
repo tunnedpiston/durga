@@ -12,136 +12,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- ==========================================================================
-       FIGMA WORKSPACE EMULATOR
-       ========================================================================== -->
-  <div id="figma-workspace">
-    
-    <!-- Figma Header Toolbar -->
-    <div id="figma-toolbar">
-      <div class="figma-logo-badge">
-        <i class="fa-brands fa-figma figma-logo-icon"></i>
-        <span>Durga Furniture Design System / v1.4</span>
-      </div>
-      
-      <!-- Device Frame Viewport Selectors -->
-      <div class="figma-viewport-controls">
-        <button class="figma-btn active" data-viewport="desktop">
-          <i class="fa-solid fa-desktop"></i> Desktop (1440px)
-        </button>
-        <button class="figma-btn" data-viewport="tablet">
-          <i class="fa-solid fa-tablet-screen-button"></i> Tablet (768px)
-        </button>
-        <button class="figma-btn" data-viewport="mobile">
-          <i class="fa-solid fa-mobile-screen-button"></i> Mobile (390px)
-        </button>
-      </div>
-      <div class="figma-zoom-controls">
-        <span>Scale: 100%</span>
-        <button class="fullscreen-toggle-btn" id="figma-fullscreen-toggle">
-          <i class="fa-solid fa-expand"></i> Full Screen Preview
-        </button>
-      </div>
-    </div>
-    <!-- Figma Body Panel -->
-    <div id="figma-body">
-      
-      <!-- Figma Left Design System Sidebar -->
-      <div id="figma-sidebar">
-        
-        <!-- Section: Design Tokens -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Design Tokens</div>
-          
-          <!-- Palette -->
-          <div style="font-size: 11px; margin-bottom: 6px; font-weight: 600; color: #FFFFFF;">Color Palette (Light Theme)</div>
-          <div class="token-colors-grid" style="margin-bottom: 14px;">
-            <div class="color-swatch-card">
-              <div class="color-preview" style="background-color: #FAF7F2;"></div>
-              <span class="color-name">Cream Base</span>
-              <span class="color-hex">#FAF7F2</span>
-            </div>
-            <div class="color-swatch-card">
-              <div class="color-preview" style="background-color: #C5A85C;"></div>
-              <span class="color-name">Luxury Gold</span>
-              <span class="color-hex">#C5A85C</span>
-            </div>
-            <div class="color-swatch-card">
-              <div class="color-preview" style="background-color: #3D281D;"></div>
-              <span class="color-name">Espresso</span>
-              <span class="color-hex">#3D281D</span>
-            </div>
-            <div class="color-swatch-card">
-              <div class="color-preview" style="background-color: #EAE2D5;"></div>
-              <span class="color-name">Beige Border</span>
-              <span class="color-hex">#EAE2D5</span>
-            </div>
-          </div>
-          <!-- Typography -->
-          <div style="font-size: 11px; margin-bottom: 6px; font-weight: 600; color: #FFFFFF;">Typography Specs</div>
-          <div class="token-fonts-list">
-            <div class="font-token-item">
-              <span class="font-token-family" style="font-family: 'Playfair Display', serif;">Playfair Display</span>
-              <div class="font-token-usage">Headings, Hero Titles (Serif)</div>
-            </div>
-            <div class="font-token-item">
-              <span class="font-token-family" style="font-family: 'Poppins', sans-serif;">Poppins</span>
-              <div class="font-token-usage">Body Text, UI Labels (Sans-serif)</div>
-            </div>
-          </div>
-        </div>
-        <!-- Section: Layout Grids -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Layout Grids</div>
-          <div class="token-fonts-list">
-            <div class="font-token-item">
-              <span class="font-token-family">Desktop (1440px)</span>
-              <div class="font-token-usage">12-Column Grid | 80px Gutter</div>
-            </div>
-            <div class="font-token-item">
-              <span class="font-token-family">Tablet (768px)</span>
-              <div class="font-token-usage">8-Column Grid | 32px Gutter</div>
-            </div>
-            <div class="font-token-item">
-              <span class="font-token-family">Mobile (390px)</span>
-              <div class="font-token-usage">4-Column Grid | 16px Gutter</div>
-            </div>
-          </div>
-        </div>
-        <!-- Section: Interactive Components -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Figma UI Variants</div>
-          <div class="component-spec-list">
-            <div class="component-spec-item" onclick="routeTo('listing')">
-              <i class="fa-solid fa-cubes"></i>
-              <span>Product Cards (3 states)</span>
-            </div>
-            <div class="component-spec-item" onclick="routeTo('wishlist')">
-              <i class="fa-solid fa-heart"></i>
-              <span>Wishlist Counter Badge</span>
-            </div>
-            <div class="component-spec-item" onclick="routeTo('home')">
-              <i class="fa-solid fa-wand-magic-sparkles"></i>
-              <span>Glassmorphism Cards</span>
-            </div>
-            <div class="component-spec-item" onclick="routeTo('admin')">
-              <i class="fa-solid fa-key"></i>
-              <span>Admin Dash Secret Trigger</span>
-            </div>
-          </div>
-        </div>
-        <div style="font-size: 11px; color: #8C8C8C; text-align: center; margin-top: 40px; border-top: 1px solid #3C3C3C; padding-top: 12px;">
-          Coimbatore, Tamil Nadu<br>Durga Furniture © 2026
-        </div>
-      </div>
-      <!-- Figma Canvas Workspace Area -->
-      <div id="figma-canvas">
-        
-        <div class="emulator-frame-wrapper" style="width: 1440px;">
-          <div class="emulator-label">
-            <span>Durga Furniture Prototype Frame</span>
-            <span>Scale: 100% (Fit)</span>
-          </div>
+
+   
           <!-- Inside the Emulator Frame: Website Application -->
           <div class="emulator-container" id="emulator-container">
             
@@ -504,7 +376,6 @@
                   <div class="container location-section-inner">
                     <div class="location-header">
                       <h2>Our Location</h2>
-                      <p>No.17/1, 17/1, Srinivasa Ragavan St, near Gandhi Park, R.S. Puram, Coimbatore, Tamil Nadu 641001</p>
                     </div>
                     <div class="map-card">
                       <iframe src="https://www.google.com/maps?q=No.17/1%2C%2017/1%2C%20Srinivasa%20Ragavan%20St%2C%20near%20Gandhi%20Park%2C%20RS%20Puram%2C%20Coimbatore%2C%20Tamil%20Nadu%20641001&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -811,7 +682,6 @@
                   <div class="contact-map-section">
                     <div class="location-header">
                       <h2>Our Location</h2>
-                      <p>No.17/1, 17/1, Srinivasa Ragavan St, near Gandhi Park, R.S. Puram, Coimbatore, Tamil Nadu 641001</p>
                     </div>
                     <div class="map-card">
                       <iframe src="https://www.google.com/maps?q=No.17/1%2C%2017/1%2C%20Srinivasa%20Ragavan%20St%2C%20near%20Gandhi%20Park%2C%20RS%20Puram%2C%20Coimbatore%2C%20Tamil%20Nadu%20641001&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>

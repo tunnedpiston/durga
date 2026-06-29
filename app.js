@@ -656,6 +656,11 @@ function initFigmaCanvas() {
   const fullscreenToggle = document.getElementById('figma-fullscreen-toggle');
   const exitFullscreenFloating = document.getElementById('exit-fullscreen-btn');
   const websiteAppWrapper = document.getElementById('website-app-wrapper');
+
+  if (!emulatorContainer || !websiteAppWrapper) {
+    return;
+  }
+
   // Change Viewports
   viewButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -680,25 +685,29 @@ function initFigmaCanvas() {
       }
     });
   });
-  // Full Screen Preview Toggle
-  fullscreenToggle.addEventListener('click', () => {
-    figmaWorkspace.classList.add('fullscreen-mode');
-    exitFullscreenFloating.style.display = 'flex';
-    // Clear bezel sizing constraints to fill native viewport
-    emulatorContainer.className = 'emulator-container';
-    websiteAppWrapper.className = 'durga-website-app';
-    emulatorContainer.style.width = '100%';
-  });
-  exitFullscreenFloating.addEventListener('click', () => {
-    figmaWorkspace.classList.remove('fullscreen-mode');
-    exitFullscreenFloating.style.display = 'none';
-    
-    // Reactivate the active figma viewport button styling
-    const activeBtn = document.querySelector('.figma-btn.active[data-viewport]');
-    if (activeBtn) {
-      activeBtn.click();
-    }
-  });
+
+  if (fullscreenToggle && exitFullscreenFloating && figmaWorkspace) {
+    // Full Screen Preview Toggle
+    fullscreenToggle.addEventListener('click', () => {
+      figmaWorkspace.classList.add('fullscreen-mode');
+      exitFullscreenFloating.style.display = 'flex';
+      // Clear bezel sizing constraints to fill native viewport
+      emulatorContainer.className = 'emulator-container';
+      websiteAppWrapper.classList.remove('simulated-desktop', 'simulated-tablet', 'simulated-mobile');
+      emulatorContainer.style.width = '100%';
+    });
+
+    exitFullscreenFloating.addEventListener('click', () => {
+      figmaWorkspace.classList.remove('fullscreen-mode');
+      exitFullscreenFloating.style.display = 'none';
+      
+      // Reactivate the active figma viewport button styling
+      const activeBtn = document.querySelector('.figma-btn.active[data-viewport]');
+      if (activeBtn) {
+        activeBtn.click();
+      }
+    });
+  }
 }
 // ==========================================================================
 // NAVIGATION ROUTING
@@ -806,6 +815,7 @@ function getProductCardMarkup(product) {
   return `
     <div class="product-card" data-id="${product.id}" data-detail-id="${product.id}">
       <div class="product-card-img-wrapper">
+        <img class="product-card-img" src="${product.img}" alt="${product.title}" onerror="this.src='https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80'" />
         <div class="product-card-badge ${badgeClass}">${product.category.split(' ')[0]}</div>
         <button class="wishlist-btn-round ${isLiked ? 'liked' : ''}" data-wishlist-id="${product.id}" aria-label="Add to Wishlist">
           <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
