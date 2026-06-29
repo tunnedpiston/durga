@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Durga Furniture - Premium UI/UX Design System & Prototype</title>
+  <!-- Google Fonts: Playfair Display for Serifs, Poppins for Body/UI -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ==========================================================================
+       FIGMA WORKSPACE EMULATOR
+       ========================================================================== -->
+  <div id="figma-workspace">
+    
+    <!-- Figma Header Toolbar -->
+    <div id="figma-toolbar">
+      <div class="figma-logo-badge">
+        <i class="fa-brands fa-figma figma-logo-icon"></i>
+        <span>Durga Furniture Design System / v1.4</span>
+      </div>
+      
+      <!-- Device Frame Viewport Selectors -->
+      <div class="figma-viewport-controls">
+        <button class="figma-btn active" data-viewport="desktop">
+          <i class="fa-solid fa-desktop"></i> Desktop (1440px)
+        </button>
+        <button class="figma-btn" data-viewport="tablet">
+          <i class="fa-solid fa-tablet-screen-button"></i> Tablet (768px)
+        </button>
+        <button class="figma-btn" data-viewport="mobile">
+          <i class="fa-solid fa-mobile-screen-button"></i> Mobile (390px)
+        </button>
+      </div>
+      <div class="figma-zoom-controls">
+        <span>Scale: 100%</span>
+        <button class="fullscreen-toggle-btn" id="figma-fullscreen-toggle">
+          <i class="fa-solid fa-expand"></i> Full Screen Preview
+        </button>
+      </div>
+    </div>
+    <!-- Figma Body Panel -->
+    <div id="figma-body">
+      
+      <!-- Figma Left Design System Sidebar -->
+      <div id="figma-sidebar">
+        
+        <!-- Section: Design Tokens -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Design Tokens</div>
+          
+          <!-- Palette -->
+          <div style="font-size: 11px; margin-bottom: 6px; font-weight: 600; color: #FFFFFF;">Color Palette (Light Theme)</div>
+          <div class="token-colors-grid" style="margin-bottom: 14px;">
+            <div class="color-swatch-card">
+              <div class="color-preview" style="background-color: #FAF7F2;"></div>
+              <span class="color-name">Cream Base</span>
+              <span class="color-hex">#FAF7F2</span>
+            </div>
+            <div class="color-swatch-card">
+              <div class="color-preview" style="background-color: #C5A85C;"></div>
+              <span class="color-name">Luxury Gold</span>
+              <span class="color-hex">#C5A85C</span>
+            </div>
+            <div class="color-swatch-card">
+              <div class="color-preview" style="background-color: #3D281D;"></div>
+              <span class="color-name">Espresso</span>
+              <span class="color-hex">#3D281D</span>
+            </div>
+            <div class="color-swatch-card">
+              <div class="color-preview" style="background-color: #EAE2D5;"></div>
+              <span class="color-name">Beige Border</span>
+              <span class="color-hex">#EAE2D5</span>
+            </div>
+          </div>
+          <!-- Typography -->
+          <div style="font-size: 11px; margin-bottom: 6px; font-weight: 600; color: #FFFFFF;">Typography Specs</div>
+          <div class="token-fonts-list">
+            <div class="font-token-item">
+              <span class="font-token-family" style="font-family: 'Playfair Display', serif;">Playfair Display</span>
+              <div class="font-token-usage">Headings, Hero Titles (Serif)</div>
+            </div>
+            <div class="font-token-item">
+              <span class="font-token-family" style="font-family: 'Poppins', sans-serif;">Poppins</span>
+              <div class="font-token-usage">Body Text, UI Labels (Sans-serif)</div>
+            </div>
+          </div>
+        </div>
+        <!-- Section: Layout Grids -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Layout Grids</div>
+          <div class="token-fonts-list">
+            <div class="font-token-item">
+              <span class="font-token-family">Desktop (1440px)</span>
+              <div class="font-token-usage">12-Column Grid | 80px Gutter</div>
+            </div>
+            <div class="font-token-item">
+              <span class="font-token-family">Tablet (768px)</span>
+              <div class="font-token-usage">8-Column Grid | 32px Gutter</div>
+            </div>
+            <div class="font-token-item">
+              <span class="font-token-family">Mobile (390px)</span>
+              <div class="font-token-usage">4-Column Grid | 16px Gutter</div>
+            </div>
+          </div>
+        </div>
+        <!-- Section: Interactive Components -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Figma UI Variants</div>
+          <div class="component-spec-list">
+            <div class="component-spec-item" onclick="routeTo('listing')">
+              <i class="fa-solid fa-cubes"></i>
+              <span>Product Cards (3 states)</span>
+            </div>
+            <div class="component-spec-item" onclick="routeTo('wishlist')">
+              <i class="fa-solid fa-heart"></i>
+              <span>Wishlist Counter Badge</span>
+            </div>
+            <div class="component-spec-item" onclick="routeTo('home')">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Glassmorphism Cards</span>
+            </div>
+            <div class="component-spec-item" onclick="routeTo('admin')">
+              <i class="fa-solid fa-key"></i>
+              <span>Admin Dash Secret Trigger</span>
+            </div>
+          </div>
+        </div>
+        <div style="font-size: 11px; color: #8C8C8C; text-align: center; margin-top: 40px; border-top: 1px solid #3C3C3C; padding-top: 12px;">
+          Coimbatore, Tamil Nadu<br>Durga Furniture © 2026
+        </div>
+      </div>
+      <!-- Figma Canvas Workspace Area -->
+      <div id="figma-canvas">
+        
+        <div class="emulator-frame-wrapper" style="width: 1440px;">
+          <div class="emulator-label">
+            <span>Durga Furniture Prototype Frame</span>
+            <span>Scale: 100% (Fit)</span>
+          </div>
+          <!-- Inside the Emulator Frame: Website Application -->
+          <div class="emulator-container" id="emulator-container">
+            
+            <div class="durga-website-app" id="website-app-wrapper">
+              
+              <!-- Header Top Bar -->
+              <div class="header-top">
+                <div class="container">
+                  <div class="header-top-info">
+                    <span><i class="fa-solid fa-award"></i> 30+ Years of Excellence</span>
+                    <span><i class="fa-solid fa-location-dot"></i> Coimbatore, Tamil Nadu</span>
+                  </div>
+                  <div>
+                    <span style="cursor: pointer;" onclick="routeTo('admin')"><i class="fa-solid fa-lock"></i> Staff Portal</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Main E-Commerce Header -->
+              <header class="main-header">
+                <div class="container">
+                  <div class="header-main">
+                    <div class="container" style="padding:0;">
+                      
+                      <!-- Brand Logo - Secret button to admin -->
+                      <div class="brand-logo" id="logo-admin-trigger" title="Admin Portal (Secret Click)">
+                        <!-- Beautiful high-fidelity SVG translation of the DF Logo -->
+                        <svg class="logo-icon-svg" viewBox="0 0 100 100">
+                          <path d="M 50,6 A 44,44 0 0,1 94,50" fill="none" stroke="#E24C4C" stroke-width="4" stroke-linecap="round" />
+                          <path d="M 50,94 A 44,44 0 0,1 6,50" fill="none" stroke="#E24C4C" stroke-width="4" stroke-linecap="round" />
+                          <text x="50" y="58" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-style="italic" font-size="34" fill="#E24C4C" text-anchor="middle">DF</text>
+                        </svg>
+                        <div class="logo-text">
+                          <span class="logo-title">Durga Furniture</span>
+                          <span class="logo-subtitle">Coimbatore</span>
+                        </div>
+                      </div>
+                      <!-- Nav Menu Links -->
+                      <nav class="nav-menu">
+                        <span class="nav-item active" data-route="home">Home</span>
+                        <span class="nav-item" data-route="listing" data-category="Steel Furniture">Steel Furniture</span>
+                        <span class="nav-item" data-route="listing" data-category="Wooden Furniture">Wooden Furniture</span>
+                        <span class="nav-item" data-route="listing" data-category="Other Furniture">Other Furniture</span>
+                        <span class="nav-item" data-route="about">About Us</span>
+                        <span class="nav-item" data-route="contact">Contact Us</span>
+                      </nav>
+                      <!-- Utilities (Search, Wishlist) -->
+                      <div class="header-utilities">
+                        <button class="utility-icon-btn" onclick="routeTo('listing')" title="Search products">
+                          <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button class="utility-icon-btn" onclick="routeTo('wishlist')" title="View Wishlist">
+                          <i class="fa-solid fa-heart"></i>
+                          <span class="utility-badge wishlist-counter-badge">0</span>
+                        </button>
+                        
+                        <!-- Mobile Hamburger Button -->
+                        <button class="utility-icon-btn hamburger-btn" id="mobile-menu-toggle">
+                          <i class="fa-solid fa-bars-staggered"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </header>
+              <!-- Mobile Slide Over Menu -->
+              <div class="mobile-nav-panel" id="mobile-nav-panel">
+                <div class="mobile-nav-header">
+                  <span class="logo-title" style="font-size: 16px;">Durga Furniture</span>
+                  <button class="mobile-nav-close" id="mobile-menu-close"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="mobile-nav-items">
+                  <span class="mobile-nav-item active" data-route="home">Home</span>
+                  <span class="mobile-nav-item" data-route="listing" data-category="Steel Furniture">Steel Furniture</span>
+                  <span class="mobile-nav-item" data-route="listing" data-category="Wooden Furniture">Wooden Furniture</span>
+                  <span class="mobile-nav-item" data-route="listing" data-category="Other Furniture">Other Furniture</span>
+                  <span class="mobile-nav-item" data-route="about">About Us</span>
+                  <span class="mobile-nav-item" data-route="contact">Contact Us</span>
+                </div>
+                <div style="margin-top: auto; font-size: 11px; color: var(--color-text-muted);">
+                  <i class="fa-solid fa-phone"></i> +91 98765 43210<br>
+                  Coimbatore, Tamil Nadu
+                </div>
+              </div>
+              <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+              <!-- ==========================================================================
+                   PAGE VIEW: HOME PAGE
+                   ========================================================================== */ -->
+              <main class="view-panel active" id="home-view">
+                
+                <!-- 1. Hero Section -->
+                <section class="hero-section">
+                  <div class="container hero-container-row">
+                    <div class="hero-content">
+                      <span class="hero-tagline">30+ Years of Manufacturing Excellence</span>
+                      <h1 class="hero-title">Experience the Art of <span>Premium Wood & Steel</span> Craftsmanship</h1>
+                      <p class="hero-desc">Directly from Coimbatore's finest furniture manufacturer. Handcrafted wooden collections and heavy-duty steel furniture built to last a lifetime.</p>
+                      <div style="display: flex; gap: 14px;">
+                        <button class="btn-gold" onclick="routeTo('listing')">Explore Collections</button>
+                        <button class="btn-outline" data-route="contact">Get A Quote</button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Hero image using our generated premium teak sofa -->
+                  <div class="hero-background-image" style="background-image: url('https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80');"></div>
+                </section>
+                <!-- Category Collections Row Banner -->
+                <div class="container" style="margin-top: 48px;">
+                  <div class="category-banners-row">
+                    <!-- Banner 1: Steel -->
+                    <div class="category-banner-card">
+                      <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80" alt="Steel Furniture" class="category-banner-bg" onerror="this.src='https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80'">
+                      <div class="category-banner-overlay">
+                        <h3 class="category-banner-title">Steel Furniture</h3>
+                        <span class="category-banner-link" data-route="listing" data-category="Steel Furniture">Shop Collection <i class="fa-solid fa-arrow-right"></i></span>
+                      </div>
+                    </div>
+                    <!-- Banner 2: Wooden -->
+                    <div class="category-banner-card">
+                      <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80" alt="Wooden Furniture" class="category-banner-bg">
+                      <div class="category-banner-overlay">
+                        <h3 class="category-banner-title">Wooden Furniture</h3>
+                        <span class="category-banner-link" data-route="listing" data-category="Wooden Furniture">Shop Collection <i class="fa-solid fa-arrow-right"></i></span>
+                      </div>
+                    </div>
+                    <!-- Banner 3: Other -->
+                    <div class="category-banner-card">
+                      <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80" alt="Other Furniture" class="category-banner-bg" onerror="this.src='https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80'">
+                      <div class="category-banner-overlay">
+                        <h3 class="category-banner-title">Other Furniture</h3>
+                        <span class="category-banner-link" data-route="listing" data-category="Other Furniture">Shop Collection <i class="fa-solid fa-arrow-right"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 2. Featured Products Grid -->
+                <section class="container">
+                  <div class="section-header">
+                    <span class="section-tagline">Curated Best Sellers</span>
+                    <h2 class="section-title">Featured Pieces</h2>
+                  </div>
+                  <div class="products-grid" id="featured-products-grid">
+                    <!-- Dynamic rendering by app.js -->
+                  </div>
+                  <div style="text-align: center; margin-bottom: 40px;">
+                    <button class="btn-outline" onclick="routeTo('listing')">View All 100+ Products</button>
+                  </div>
+                </section>
+                <!-- 6. Why Choose Us Section -->
+                <section class="why-choose-us-section">
+                  <div class="container">
+                    <div class="section-header" style="margin-top: 0; margin-bottom: 40px;">
+                      <span class="section-tagline">Durability Guaranteed</span>
+                      <h2 class="section-title">Why Choose Durga Furniture</h2>
+                    </div>
+                    <div class="why-grid">
+                      <div class="why-item">
+                        <div class="why-icon"><i class="fa-solid fa-hammer"></i></div>
+                        <h4 class="why-title">Own Manufacturing</h4>
+                        <p class="why-desc">Handcrafted items built by expert woodcarvers and steel structural engineers.</p>
+                      </div>
+                      <div class="why-item">
+                        <div class="why-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h4 class="why-title">30+ Years Trust</h4>
+                        <p class="why-desc">Trusted by over 10,000+ happy families and businesses in Tamil Nadu since 1996.</p>
+                      </div>
+                      <div class="why-item">
+                        <div class="why-icon"><i class="fa-solid fa-tree"></i></div>
+                        <h4 class="why-title">Premium Grade Teak</h4>
+                        <p class="why-desc">We use seasoned and treated solid teak wood to prevent warping and degradation.</p>
+                      </div>
+                      <div class="why-item">
+                        <div class="why-icon"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                        <h4 class="why-title">Coimbatore Delivery</h4>
+                        <p class="why-desc">Direct warehouse-to-home delivery with free professional assembly services.</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <!-- 7. 30+ Years of Excellence Section -->
+                <section class="excellence-section">
+                  <div class="container">
+                    <div class="excellence-row">
+                      <div class="excellence-left">
+                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80" alt="Furniture Factory" class="excellence-img" onerror="this.src='https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80'">
+                        <div class="excellence-badge-floating">
+                          <div class="excellence-badge-number">30+</div>
+                          <div class="excellence-badge-text">Years Of Crafting Legacy</div>
+                        </div>
+                      </div>
+                      <div class="excellence-right">
+                        <span class="section-tagline" style="text-align: left; display: inline-block;">Our Story</span>
+                        <h2 class="excellence-right-title">Crafting Comfort & Elegance Since 1996</h2>
+                        <p class="excellence-right-desc">Durga Furniture has been a landmark of quality in Coimbatore. Founded in 1996 as a small wooden furniture workshop, we have grown into one of Coimbatore's premier manufacturers of luxury home wooden furniture and industrial steel furniture.</p>
+                        <p class="excellence-right-desc">Every piece is designed to harmonize aesthetics, durability, and ergonomic support. Our state-of-the-art manufacturing factory utilizes seasonal treatment processes to make sure our wood lasts generation after generation.</p>
+                        <div class="excellence-stats">
+                          <div>
+                            <div class="stat-box-title">10K+</div>
+                            <div class="stat-box-desc">Happy Customers</div>
+                          </div>
+                          <div>
+                            <div class="stat-box-title">100+</div>
+                            <div class="stat-box-desc">Unique Designs</div>
+                          </div>
+                          <div>
+                            <div class="stat-box-title">100%</div>
+                            <div class="stat-box-desc">Coimbatore Made</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <!-- 8. Customer Testimonials -->
+                <section class="testimonials-section">
+                  <div class="container">
+                    <div class="section-header" style="margin-top: 0; margin-bottom: 30px;">
+                      <span class="section-tagline">Client Voices</span>
+                      <h2 class="section-title">Trusted By Thousands</h2>
+                    </div>
+                    <div class="testimonials-wrapper">
+                      <div class="testimonial-slide">
+                        <div class="testimonial-quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+                        <p class="testimonial-text">"Purchased a custom teak wood dining table and steel cupboard. The build quality is unmatched. Direct manufacturing price saved us nearly 30% compared to local retail showrooms."</p>
+                        <h5 class="testimonial-author">Sundararajan K.</h5>
+                        <span class="testimonial-role">Homeowner, Coimbatore</span>
+                      </div>
+                      <div class="carousel-nav-dots">
+                        <div class="dot active"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <!-- 9. Google Reviews -->
+                <section class="google-reviews-section">
+                  <div class="container">
+                    <div class="section-header" style="margin-top: 0; margin-bottom: 30px;">
+                      <span class="section-tagline">Google Reviews</span>
+                      <h2 class="section-title">Rated Excellent by Customers</h2>
+                    </div>
+                    <div class="google-reviews-summary">
+                      <div class="google-rating-badge">
+                        <div class="google-stars">★★★★★</div>
+                        <div class="google-rating-score">4.9</div>
+                        <p>Based on 256 Google reviews</p>
+                      </div>
+                      <div class="google-review-cta">
+                        <a href="https://www.google.com/search?q=Durga+Furniture+Coimbatore+reviews" target="_blank" rel="noopener noreferrer">View All Google Reviews</a>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <!-- 10. Masonry Gallery -->
+                <section class="gallery-section">
+                  <div class="container">
+                    <div class="section-header" style="margin-top: 0; margin-bottom: 40px;">
+                      <span class="section-tagline">Our Work</span>
+                      <h2 class="section-title">Showroom Installations</h2>
+                    </div>
+                    <div class="gallery-grid">
+                      <div class="gallery-item col-span-2 row-span-2">
+                        <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80" alt="Living Room Setup" class="gallery-img">
+                        <div class="gallery-item-overlay"><span class="gallery-tag">Living Setup</span></div>
+                      </div>
+                      <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80" alt="Office Setup" class="gallery-img" onerror="this.src='https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80'">
+                        <div class="gallery-item-overlay"><span class="gallery-tag">Office Space</span></div>
+                      </div>
+                      <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80" alt="Cupboard Setup" class="gallery-img" onerror="this.src='https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80'">
+                        <div class="gallery-item-overlay"><span class="gallery-tag">Steel Almirah</span></div>
+                      </div>
+                      <div class="gallery-item col-span-2">
+                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80" alt="Dining Room Setup" class="gallery-img" onerror="this.src='https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80'">
+                        <div class="gallery-item-overlay"><span class="gallery-tag">Dining Setups</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <!-- 10. Contact & Location Section -->
+                <section class="contact-section">
+                  <div class="container">
+                    <div class="contact-grid">
+                      <div class="contact-info-card">
+                        <h3 class="contact-title-small">Get In Touch</h3>
+                        <p class="contact-desc">Have a custom sizing query or want to order in bulk? Contact us directly. Our Coimbatore specialists are here to help.</p>
+                        <div class="contact-details-list">
+                          <div class="contact-detail-item">
+                            <div class="contact-detail-icon"><i class="fa-solid fa-location-dot"></i></div>
+                            <div class="contact-detail-text">
+                              <strong>Headquarters & Factory</strong>
+                              <span>Durga Furniture Buildings, Avinashi Road, Coimbatore - 641018, Tamil Nadu</span>
+                            </div>
+                          </div>
+                          <div class="contact-detail-item">
+                            <div class="contact-detail-icon"><i class="fa-solid fa-phone"></i></div>
+                            <div class="contact-detail-text">
+                              <strong>Call Enquiry Support</strong>
+                              <span>+91 98765 43210 / +91 422 254879</span>
+                            </div>
+                          </div>
+                          <div class="contact-detail-item">
+                            <div class="contact-detail-icon"><i class="fa-solid fa-envelope"></i></div>
+                            <div class="contact-detail-text">
+                              <strong>Email Support</strong>
+                              <span>enquiry@durgafurniture.com</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <h3 class="contact-title-small" style="margin-left: 10px;">Send Us a Message</h3>
+                        <form class="contact-form" onsubmit="event.preventDefault(); showToast('Enquiry Sent! Our team will call you shortly.'); this.reset();">
+                          <div class="form-row-2">
+                            <div class="form-group">
+                              <label>Full Name</label>
+                              <input type="text" class="form-control" placeholder="E.g. Rajesh Kumar" required>
+                            </div>
+                            <div class="form-group">
+                              <label>Phone Number</label>
+                              <input type="tel" class="form-control" placeholder="E.g. +91 9876543210" required>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label>Product Interest</label>
+                            <select class="form-control">
+                              <option>Teak Wood Sofa Sets</option>
+                              <option>Premium Steel Almirah</option>
+                              <option>Dining Table Setups</option>
+                              <option>Office Ergonomic Chairs</option>
+                              <option>Custom Wooden Furniture</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label>Enquiry Message</label>
+                            <textarea class="form-control" placeholder="Share your furniture specs and dimensions requirement..." required></textarea>
+                          </div>
+                          <button type="submit" class="btn-gold" style="align-self: flex-start;">Send Enquiry</button>
+                        </form>
+                      </div>
+                    </div>
+                    <div class="contact-social-bar">
+                      <a href="https://www.instagram.com" class="social-btn social-btn-instagram" target="_blank" rel="noreferrer">
+                        <i class="fa-brands fa-instagram"></i> Instagram
+                      </a>
+                      <a href="https://wa.me/919876543210" class="social-btn social-btn-whatsapp" target="_blank" rel="noreferrer">
+                        <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                      </a>
+                      <a href="https://www.facebook.com" class="social-btn social-btn-facebook" target="_blank" rel="noreferrer">
+                        <i class="fa-brands fa-facebook-f"></i> Facebook
+                      </a>
+                      <a href="https://www.youtube.com" class="social-btn social-btn-youtube" target="_blank" rel="noreferrer">
+                        <i class="fa-brands fa-youtube"></i> YouTube
+                      </a>
+                    </div>
+                  </div>
+                </section>
+                <section class="location-section">
+                  <div class="container location-section-inner">
+                    <div class="location-header">
+                      <h2>Our Location</h2>
+                      <p>No.17/1, 17/1, Srinivasa Ragavan St, near Gandhi Park, R.S. Puram, Coimbatore, Tamil Nadu 641001</p>
+                    </div>
+                    <div class="map-card">
+                      <iframe src="https://www.google.com/maps?q=No.17/1%2C%2017/1%2C%20Srinivasa%20Ragavan%20St%2C%20near%20Gandhi%20Park%2C%20RS%20Puram%2C%20Coimbatore%2C%20Tamil%20Nadu%20641001&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                  </div>
+                </section>
+              </main>
+              <!-- ==========================================================================
+                   PAGE VIEW: PRODUCT LISTING PAGE (CATALOG)
+                   ========================================================================== -->
+              <main class="view-panel" id="listing-view">
+                <div class="container">
+                  <div class="section-header" style="margin-bottom: 24px;">
+                    <span class="section-tagline">Durga Catalog</span>
+                    <h2 class="section-title">Explore Furniture Range</h2>
+                  </div>
+                  <div class="catalog-layout">
+                    
+                    <!-- Left Sidebar Filters -->
+                    <aside class="filter-sidebar">
+                      <!-- Filter: Search -->
+                      <div>
+                        <h4 class="filter-widget-title">Categories</h4>
+                        <div class="filter-checkbox-list">
+                          <label class="filter-checkbox-label">
+                            <input type="checkbox" class="category-filter-checkbox" data-cat-value="Steel Furniture"> Steel Furniture
+                          </label>
+                          <label class="filter-checkbox-label">
+                            <input type="checkbox" class="category-filter-checkbox" data-cat-value="Wooden Furniture"> Wooden Furniture
+                          </label>
+                          <label class="filter-checkbox-label">
+                            <input type="checkbox" class="category-filter-checkbox" data-cat-value="Other Furniture"> Other Furniture
+                          </label>
+                        </div>
+                      </div>
+                    </aside>
+                    <!-- Right Results Pane -->
+                    <section class="catalog-results">
+                      <div class="catalog-toolbar">
+                        <div class="catalog-search-wrapper">
+                          <i class="fa-solid fa-magnifying-glass"></i>
+                          <input type="text" placeholder="Search catalog..." class="catalog-search-input" id="catalog-search-input">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                          <span id="catalog-results-count" style="font-size:12px; color:var(--color-text-muted);">Showing 10 products</span>
+                          <div class="catalog-sort-wrapper">
+                            <label>Sort By:</label>
+                            <select class="catalog-sort-select" id="catalog-sort-select">
+                              <option value="popular">Popularity</option>
+                              <option value="latest">New Arrivals</option>
+                              <option value="price-low">Price: Low to High</option>
+                              <option value="price-high">Price: High to Low</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Active Cards Grid -->
+                      <div class="products-grid" id="catalog-results-grid">
+                        <!-- Rendered dynamically by app.js -->
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </main>
+              <!-- ==========================================================================
+                   PAGE VIEW: PRODUCT DETAILS PAGE (AMAZON-STYLE)
+                   ========================================================================== -->
+              <main class="view-panel" id="details-view">
+                <div class="container details-page-wrapper">
+                  
+                  <!-- Breadcrumb Nav -->
+                  <div style="font-size: 11px; margin-bottom: 24px; color: var(--color-text-muted);">
+                    <span style="cursor: pointer;" onclick="routeTo('home')">Home</span> / 
+                    <span style="cursor: pointer;" onclick="routeTo('listing')" id="details-crumb-category">Wooden Furniture</span> / 
+                    <span id="details-crumb-title" style="color: var(--color-text-espresso); font-weight: 600;">Teak Sofa Set</span>
+                  </div>
+                  <div class="details-main-row">
+                    
+                    <!-- Left: Large Image Gallery -->
+                    <div class="details-gallery">
+                      <!-- Main image viewport with zoom lens -->
+                      <div class="details-main-image-wrapper" id="details-main-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80" alt="Sofa Main" class="details-main-image" id="details-main-view-image">
+                        <div class="details-zoom-overlay" id="details-zoom-overlay"></div>
+                      </div>
+                    </div>
+                    <!-- Right: Info Panel & Purchase CTA -->
+                    <div class="details-info">
+                      <div class="details-meta-row">
+                        <span class="details-category" id="details-category-badge">Wooden Furniture</span>
+                        <span class="details-stock-badge"><i class="fa-solid fa-circle-check"></i> Manufacturer Stock</span>
+                      </div>
+                      <h2 class="details-title" id="details-title-text">Heritage Teak Wood Sofa Set</h2>
+                      
+                      <!-- Ratings -->
+                      <div class="details-rating-row">
+                        <div class="rating-stars">
+                          <i class="fa-solid fa-star"></i>
+                          <i class="fa-solid fa-star"></i>
+                          <i class="fa-solid fa-star"></i>
+                          <i class="fa-solid fa-star"></i>
+                          <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <span class="reviews-count" id="details-reviews-count">(98 Customer Reviews)</span>
+                      </div>
+                      <!-- Price block -->
+                      <div class="details-price-row">
+                        <div>
+                          <span class="details-price" id="details-price-tag">₹68,500</span>
+                          <span style="text-decoration: line-through; color: var(--color-text-muted); margin-left: 8px;" id="details-original-price-tag">₹79,999</span>
+                        </div>
+                        <span style="background-color: var(--color-primary-gold); color: white; padding: 2px 8px; font-size: 10px; font-weight: 700; border-radius: 4px;">DIRECT FACTORY PRICE</span>
+                      </div>
+                      <!-- Short Description -->
+                      <p class="details-desc" id="details-description-text">Exquisitely carved by Coimbatore master craftsmen from premium grade-A solid Teak Wood. Features high-density foam cushions upholstered in premium golden velvet fabric.</p>
+                      <!-- Specifications Sheet -->
+                      <h4 class="details-specs-title">Technical Specifications</h4>
+                      <div class="details-specs-grid">
+                        <div class="spec-item">
+                          <span class="spec-label">Dimensions</span>
+                          <span class="spec-val" id="spec-dimensions">Sofa: 34" H x 76" W x 32" D</span>
+                        </div>
+                        <div class="spec-item">
+                          <span class="spec-label">Materials</span>
+                          <span class="spec-val" id="spec-materials">Seasoned Solid Teak Wood</span>
+                        </div>
+                        <div class="spec-item">
+                          <span class="spec-label">Warranty</span>
+                          <span class="spec-val" id="spec-warranty">5 Years Structural</span>
+                        </div>
+                        <div class="spec-item">
+                          <span class="spec-label">Availability</span>
+                          <span class="spec-val" id="spec-status">In Stock (Coimbatore Factory)</span>
+                        </div>
+                      </div>
+                      <!-- WhatsApp & Action CTA Panel -->
+                      <div class="details-actions-bar">
+                        <!-- Direct Enquiry buttons -->
+                        <button class="btn-whatsapp-cta" id="details-whatsapp-cta">
+                          <i class="fa-brands fa-whatsapp"></i> Enquire On WhatsApp
+                        </button>
+                        <button class="btn-call-cta" id="details-call-cta">
+                          <i class="fa-solid fa-phone"></i> Call Now
+                        </button>
+                        
+                        <!-- Wishlist button -->
+                        <button class="details-action-circle-btn" id="details-wishlist-heart-btn" title="Add to Wishlist">
+                          <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <!-- Share Button -->
+                        <button class="details-action-circle-btn" id="details-share-cta" title="Share Product Link">
+                          <i class="fa-solid fa-share-nodes"></i>
+                        </button>
+                      </div>
+                      <!-- Material accordions -->
+                      <div class="accordion-wrapper">
+                        <div class="accordion-item active">
+                          <div class="accordion-trigger">
+                            <span>Materials & Care</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                          </div>
+                          <div class="accordion-content" style="max-height: 150px;">
+                            We source only seasoned Teak Wood and high-tensile steel alloys. Dust weekly with a soft dry cloth. Avoid exposure to direct rainfall or constant high-moisture setups.
+                          </div>
+                        </div>
+                        <div class="accordion-item">
+                          <div class="accordion-trigger">
+                            <span>Direct Shipping & Assembly</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                          </div>
+                          <div class="accordion-content">
+                            Free shipping inside Coimbatore city limits. For other districts in Tamil Nadu, transit rates apply. Our carpentry team provides free assembly upon delivery.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Related Products Row -->
+                  <div style="border-top: 1px solid var(--color-beige-border); padding-top: 48px;">
+                    <h3 class="details-specs-title" style="font-size: 18px; margin-bottom: 24px; text-align: center;">Related Products</h3>
+                    <div class="products-grid" id="related-products-carousel">
+                      <!-- Rendered by JS -->
+                    </div>
+                  </div>
+                </div>
+              </main>
+              <!-- ==========================================================================
+                   PAGE VIEW: WISHLIST PAGE
+                   ========================================================================== -->
+              <main class="view-panel" id="wishlist-view">
+                <div class="container" style="padding: 40px 24px;">
+                  <div class="section-header" style="margin-top: 0; margin-bottom: 30px;">
+                    <span class="section-tagline">Saved Products</span>
+                    <h2 class="section-title">Your Wishlist</h2>
+                  </div>
+                  <div class="products-grid" id="wishlist-grid">
+                    <!-- Rendered by JS -->
+                  </div>
+                  <!-- Empty State -->
+                  <div class="wishlist-empty-state" id="wishlist-empty-state" style="display: none;">
+                    <div class="wishlist-empty-icon"><i class="fa-regular fa-heart"></i></div>
+                    <h3 class="wishlist-empty-text">Your Wishlist is Empty</h3>
+                    <button class="btn-gold" onclick="routeTo('listing')">Browse Products</button>
+                  </div>
+                </div>
+              </main>
+              <!-- ==========================================================================
+                   PAGE VIEW: ABOUT US
+                   ========================================================================== -->
+              <main class="view-panel" id="about-view">
+                <div class="container" style="padding: 48px 24px;">
+                  <div class="section-header" style="margin-top:0; margin-bottom: 32px;">
+                    <span class="section-tagline">Factory Profile</span>
+                    <h2 class="section-title">About Durga Furniture</h2>
+                  </div>
+                  <div style="max-width: 800px; margin: 0 auto;">
+                    <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80" alt="Durga Factory" style="width: 100%; height: 320px; object-fit: cover; border-radius: var(--border-radius-md); margin-bottom: 24px; border: 1px solid var(--color-beige-border);">
+                    <h3 style="margin-bottom: 14px;">Avinashi Road's Premier Furniture Pioneer</h3>
+                    <p style="color: var(--color-text-muted); margin-bottom: 16px;">Founded in Coimbatore in 1996, Durga Furniture has set the standard for premium residential and commercial furniture. Operating our own integrated wooden seasoning and steel tube fabrication factories, we deliver highest durability directly to home owners and commercial offices.</p>
+                    
+                    <h4 style="margin-top: 24px; margin-bottom: 12px; font-weight: 700;">Sustainable Teak Seasoning & Design Process</h4>
+                    <p style="color: var(--color-text-muted); margin-bottom: 16px;">We utilize state of the art wood kiln seasoning chambers to bring moisture levels down to 8-12%, preventing splits and termite infestations. Our steel collection utilizes high-grade structural alloys treated with zinc phosphate coating layers to resist moisture oxidation.</p>
+                    
+                    <div class="glass-card" style="margin-top: 30px;">
+                      <h4 style="margin-bottom: 10px;"><i class="fa-solid fa-certificate" style="color:var(--color-primary-gold);"></i> Coimbatore Manufacturing Hub</h4>
+                      <p style="font-size:12.5px; color: var(--color-text-muted);">With over 50 skilled carpenters, welders, and finishing specialists, our local workshop guarantees that every bed, sofa set, dining table, and steel cupboard meets rigorous quality tests before transport.</p>
+                    </div>
+                  </div>
+                </div>
+              </main>
+              <!-- ==========================================================================
+                   PAGE VIEW: CONTACT US
+                   ========================================================================== -->
+              <main class="view-panel" id="contact-view">
+                <div class="container" style="padding: 48px 24px;">
+                  <div class="section-header" style="margin-top:0; margin-bottom: 32px;">
+                    <span class="section-tagline">Avinashi Road HQ</span>
+                    <h2 class="section-title">Contact & Showroom Coordinates</h2>
+                  </div>
+                  <div class="contact-grid">
+                    <div class="contact-info-card">
+                      <h3 class="contact-title-small">Coimbatore Showroom</h3>
+                      <p class="contact-desc">Drop by our main Avinashi Road warehouse showroom to browse 50+ furniture setups, test materials, and coordinate with our custom carpenters.</p>
+                      
+                      <div class="contact-details-list">
+                        <div class="contact-detail-item">
+                          <div class="contact-detail-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                          <div class="contact-detail-text">
+                            <strong>Avinashi Road Showroom</strong>
+                            <span>Durga Furniture Buildings, 148 Avinashi Road, Opposite KMCH, Coimbatore - 641018</span>
+                          </div>
+                        </div>
+                        <div class="contact-detail-item">
+                          <div class="contact-detail-icon"><i class="fa-solid fa-business-time"></i></div>
+                          <div class="contact-detail-text">
+                            <strong>Working Hours</strong>
+                            <span>Monday - Saturday: 09:30 AM - 08:30 PM | Sunday: 11:00 AM - 06:00 PM</span>
+                          </div>
+                        </div>
+                        <div class="contact-detail-item">
+                          <div class="contact-detail-icon"><i class="fa-solid fa-phone-volume"></i></div>
+                          <div class="contact-detail-text">
+                            <strong>Instant Phone Connect</strong>
+                            <span>+91 98765 43210 / +91 422 254879</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="glass-card">
+                      <h3 class="contact-title-small">Submit Custom Sizing Request</h3>
+                      <form class="contact-form" onsubmit="event.preventDefault(); showToast('We received your custom dimensions query! Carpentry team will call back.'); this.reset();">
+                        <div class="form-group">
+                          <label>Contact Name</label>
+                          <input type="text" class="form-control" placeholder="E.g. Shanmugasundaram" required>
+                        </div>
+                        <div class="form-group">
+                          <label>Mobile Number</label>
+                          <input type="tel" class="form-control" placeholder="E.g. +91 9443210987" required>
+                        </div>
+                        <div class="form-group">
+                          <label>Custom Dimensions / Material specs</label>
+                          <textarea class="form-control" placeholder="Describe the size, wood thickness, custom cabinet steel gauge, cushion fabrics required..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-gold" style="width: 100%;">Submit Inquiry</button>
+                      </form>
+                    </div>
+                  </div>
+                  <br></br>
+                  <div class="contact-social-bar">
+                    <a href="https://www.instagram.com" class="social-btn social-btn-instagram" target="_blank" rel="noreferrer">
+                      <i class="fa-brands fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://wa.me/919876543210" class="social-btn social-btn-whatsapp" target="_blank" rel="noreferrer">
+                      <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                    </a>
+                    <a href="https://www.facebook.com" class="social-btn social-btn-facebook" target="_blank" rel="noreferrer">
+                      <i class="fa-brands fa-facebook-f"></i> Facebook
+                    </a>
+                    <a href="https://www.youtube.com" class="social-btn social-btn-youtube" target="_blank" rel="noreferrer">
+                      <i class="fa-brands fa-youtube"></i> YouTube
+                    </a>
+                  </div>
+                  <div class="contact-map-section">
+                    <div class="location-header">
+                      <h2>Our Location</h2>
+                      <p>No.17/1, 17/1, Srinivasa Ragavan St, near Gandhi Park, R.S. Puram, Coimbatore, Tamil Nadu 641001</p>
+                    </div>
+                    <div class="map-card">
+                      <iframe src="https://www.google.com/maps?q=No.17/1%2C%2017/1%2C%20Srinivasa%20Ragavan%20St%2C%20near%20Gandhi%20Park%2C%20RS%20Puram%2C%20Coimbatore%2C%20Tamil%20Nadu%20641001&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                  </div>
+                </div>
+              </main>
+              <!-- ==========================================================================
+                   PAGE VIEW: SECRET ADMIN DASHBOARD (STAFF PORTAL)
+                   ========================================================================== -->
+              <main class="view-panel" id="admin-view">
+                <div class="container admin-view-container">
+                  
+                  <div class="admin-header-row">
+                    <div class="admin-logo-heading">
+                      <!-- Inline Logo -->
+                      <svg class="logo-icon-svg" viewBox="0 0 100 100" style="width: 32px; height: 32px;">
+                        <path d="M 50,6 A 44,44 0 0,1 94,50" fill="none" stroke="#E24C4C" stroke-width="4" />
+                        <path d="M 50,94 A 44,44 0 0,1 6,50" fill="none" stroke="#E24C4C" stroke-width="4" />
+                        <text x="50" y="58" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-style="italic" font-size="34" fill="#E24C4C" text-anchor="middle">DF</text>
+                      </svg>
+                      <h2 style="font-size:22px;">Durga Furniture Admin Portal</h2>
+                      <span class="admin-badge-indicator">System Active</span>
+                    </div>
+                    <div>
+                      <button class="btn-gold" id="admin-add-product-btn" style="padding: 8px 16px; font-size:11px;">
+                        <i class="fa-solid fa-plus"></i> Add New Product
+                      </button>
+                    </div>
+                  </div>
+                  <!-- KPI Stats grid widgets -->
+                  <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                      <div class="admin-stat-icon"><i class="fa-solid fa-box"></i></div>
+                      <div class="admin-stat-info">
+                        <span class="admin-stat-val" id="admin-stat-catalog-size">10</span>
+                        <span class="admin-stat-label">Catalog Products</span>
+                      </div>
+                    </div>
+                    <div class="admin-stat-card">
+                      <div class="admin-stat-icon"><i class="fa-solid fa-heart"></i></div>
+                      <div class="admin-stat-info">
+                        <span class="admin-stat-val" id="admin-stat-wishlists-count">0</span>
+                        <span class="admin-stat-label">Wishlisted Items</span>
+                      </div>
+                    </div>
+                    <div class="admin-stat-card">
+                      <div class="admin-stat-icon"><i class="fa-solid fa-bell"></i></div>
+                      <div class="admin-stat-info">
+                        <span class="admin-stat-val" id="admin-stat-enquiries-count">2</span>
+                        <span class="admin-stat-label">Simulated Enquiries</span>
+                      </div>
+                    </div>
+                    <div class="admin-stat-card">
+                      <div class="admin-stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+                      <div class="admin-stat-info">
+                        <span class="admin-stat-val" id="admin-stat-popular-cat">Wooden</span>
+                        <span class="admin-stat-label">Top Category</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Admin Management Panel Section -->
+                  <div class="admin-panels-row">
+                    
+                    <!-- Product Catalogue Manager Table (CRUD) -->
+                    <div class="admin-panel">
+                      <div class="admin-panel-title-bar">
+                        <h3 class="admin-panel-title"><i class="fa-solid fa-dolly"></i> Product Catalog inventory CRUD</h3>
+                        <span style="font-size:11px; color: var(--color-text-muted);">Real-time listings synchronizer</span>
+                      </div>
+                      
+                      <div class="admin-table-wrapper">
+                        <table class="admin-table">
+                          <thead>
+                            <tr>
+                              <th style="width: 70px;">Image</th>
+                              <th>Product Title / SKU</th>
+                              <th>Category</th>
+                              <th>Price</th>
+                              <th>Dimensions</th>
+                              <th style="width: 100px;">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody id="admin-products-table-body">
+                            <!-- Populated dynamically by app.js -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <!-- Customer Enquiry Logs -->
+                    <div class="admin-panel" style="margin-top:30px;">
+                      <div class="admin-panel-title-bar">
+                        <h3 class="admin-panel-title"><i class="fa-solid fa-envelope-open-text"></i> Customer Enquiry Tracker Log</h3>
+                        <span style="font-size:11px; color: var(--color-text-muted);">Real-time captures from WhatsApp / Calls</span>
+                      </div>
+                      
+                      <div class="admin-table-wrapper">
+                        <table class="admin-table">
+                          <thead>
+                            <tr>
+                              <th style="width: 80px;">Log ID</th>
+                              <th>Enquired Product Title</th>
+                              <th>Timestamp</th>
+                              <th>Enquiry Channel</th>
+                            </tr>
+                          </thead>
+                          <tbody id="admin-enquiries-table-body">
+                            <!-- Populated dynamically by app.js -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </main>
+              <!-- ==========================================================================
+                   FOOTER
+                   ========================================================================== -->
+              <footer class="main-footer">
+                <div class="container">
+                  <div class="footer-grid">
+                    
+                    <div>
+                      <h4 class="footer-logo-title">Durga <span>Furniture</span></h4>
+                      <p class="footer-desc">Coimbatore's premium steel & teak wood furniture manufacturers since 1996. Delivering lifetime durability and elegant home design aesthetics.</p>
+                      <div class="footer-social-links">
+                        <a class="footer-social-icon" href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a class="footer-social-icon" href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a class="footer-social-icon" href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 class="footer-widget-title">Quick Links</h4>
+                      <ul class="footer-links-list">
+                        <li class="footer-link-item"><a onclick="routeTo('home')">Home Page</a></li>
+                        <li class="footer-link-item"><a onclick="routeTo('listing')">Product Catalog</a></li>
+                        <li class="footer-link-item"><a onclick="routeTo('wishlist')">Your Wishlist</a></li>
+                        <li class="footer-link-item"><a onclick="routeTo('about')">About Us</a></li>
+                        <li class="footer-link-item"><a onclick="routeTo('contact')">Showroom Location</a></li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 class="footer-widget-title">Categories</h4>
+                      <ul class="footer-links-list">
+                        <li class="footer-link-item"><a onclick="appState.filters.categories=['Steel Furniture']; syncFilterCheckboxes(); routeTo('listing');">Steel Cabinets</a></li>
+                        <li class="footer-link-item"><a onclick="appState.filters.categories=['Wooden Furniture']; syncFilterCheckboxes(); routeTo('listing');">Teak Wood Sofas</a></li>
+                        <li class="footer-link-item"><a onclick="appState.filters.categories=['Wooden Furniture']; syncFilterCheckboxes(); routeTo('listing');">Dining Table Sets</a></li>
+                        <li class="footer-link-item"><a onclick="appState.filters.categories=['Other Furniture']; syncFilterCheckboxes(); routeTo('listing');">Office Chairs</a></li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 class="footer-widget-title">Newsletter</h4>
+                      <p class="footer-newsletter-text">Subscribe to receive custom design ideas and direct factory discount sales alerts.</p>
+                      <form class="footer-newsletter-form" onsubmit="event.preventDefault(); showToast('Subscribed! Thank you.'); this.reset();">
+                        <input type="email" class="footer-newsletter-input" placeholder="Your Email Address" required>
+                        <button type="submit" class="footer-newsletter-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="footer-bottom">
+                    <span>© 2026 Durga Furniture. Avinashi Road, Coimbatore. All Rights Reserved.</span>
+                    <span>Designed as Premium Figma Responsive System Concept</span>
+                  </div>
+                </div>
+              </footer>
+            </div> <!-- End .durga-website-app -->
+            
+          </div> <!-- End #emulator-container -->
+        </div>
+      </div> <!-- End #figma-canvas -->
+    </div>
+  </div>
+  <!-- Exit Fullscreen Floating Button (Figma Mode returner) -->
+  <button class="exit-fullscreen-floating" id="exit-fullscreen-btn" style="display: none;">
+    <i class="fa-brands fa-figma"></i> Return to Figma Canvas Mode
+  </button>
+  <!-- ==========================================================================
+       MODAL CONTAINERS
+       ========================================================================== -->
+  <!-- Modal: Quick View -->
+  <div class="modal-backdrop" id="modal-quickview-backdrop">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Product Quick View</h3>
+        <button class="modal-close-btn" id="quickview-close-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" id="quickview-modal-content">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+  </div>
+  <!-- Modal: Admin Add/Edit Product -->
+  <div class="modal-backdrop" id="modal-admin-backdrop">
+    <div class="modal-container" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="admin-modal-title">Add New Product</h3>
+        <button class="modal-close-btn" id="admin-modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="admin-product-form">
+        <div class="modal-body">
+          <input type="hidden" id="admin-product-edit-id">
+          
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label>Product Title Name</label>
+              <input type="text" id="admin-prod-title" class="form-control" placeholder="E.g. Royal Teak Wardrobe" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label>Product Category</label>
+              <select id="admin-prod-category" class="form-control" required>
+                <option value="Steel Furniture">Steel Furniture</option>
+                <option value="Wooden Furniture">Wooden Furniture</option>
+                <option value="Other Furniture">Other Furniture</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label>Price (₹ INR)</label>
+              <input type="number" id="admin-prod-price" class="form-control" placeholder="E.g. 18500" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label>Simulated Image (Mock)</label>
+              <select id="admin-prod-img" class="form-control" required>
+                <option value="sofa">Teak Sofa Set Graphic</option>
+                <option value="almirah">Steel Almirah Graphic</option>
+                <option value="dining">Teak Dining Set Graphic</option>
+                <option value="chair">Ergonomic Office Chair Graphic</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label>Product Description</label>
+            <textarea id="admin-prod-desc" class="form-control" placeholder="Describe wood seasonings, locker safety, paint specs..." style="height: 80px;" required></textarea>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label>Dimensions</label>
+              <input type="text" id="admin-prod-dimensions" class="form-control" placeholder="E.g. 78 H x 36 W x 22 D" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label>Materials</label>
+              <input type="text" id="admin-prod-materials" class="form-control" placeholder="E.g. Grade-A Teak Wood" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Warranty Details</label>
+            <input type="text" id="admin-prod-warranty" class="form-control" placeholder="E.g. 5 Years Manufacturing Warranty" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline" id="admin-form-cancel" style="padding: 8px 16px; font-size:11px;">Cancel</button>
+          <button type="submit" class="btn-gold" style="padding: 8px 16px; font-size:11px;">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Toast Notification -->
+  <div id="toast-notification">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toast-text">Action completed successfully</span>
+  </div>
+  
+  <!-- Logic scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
