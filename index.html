@@ -10,11 +10,22 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Custom Stylesheets -->
   <link rel="stylesheet" href="style.css">
+  <style>
+    .emulator-container {
+      -webkit-overflow-scrolling: touch;
+    }
+  </style>
 </head>
 <body>
-
-   
-          <!-- Inside the Emulator Frame: Website Application -->
+  <div id="page-loader">
+    <div class="loader-inner">
+      <div class="loader-ring">
+        <img src="logo.png" alt="Durga Furniture Logo" class="loader-logo" onerror="this.style.display='none'">
+      </div>
+      <div class="loader-title">Durga Furniture</div>
+    </div>
+  </div>
+  <!-- Inside the Emulator Frame: Website Application -->
           <div class="emulator-container" id="emulator-container">
             
             <div class="durga-website-app" id="website-app-wrapper">
@@ -37,28 +48,13 @@
                   <div class="header-main">
                     <div class="container" style="padding:0;">
                       
-                      <!-- Brand Logo - Secret button to admin -->
-                      <div class="brand-logo" id="logo-admin-trigger" title="Admin Portal (Secret Click)">
-                        <!-- Beautiful high-fidelity SVG translation of the DF Logo -->
-                        <svg class="logo-icon-svg" viewBox="0 0 100 100">
-                          <path d="M 50,6 A 44,44 0 0,1 94,50" fill="none" stroke="#E24C4C" stroke-width="4" stroke-linecap="round" />
-                          <path d="M 50,94 A 44,44 0 0,1 6,50" fill="none" stroke="#E24C4C" stroke-width="4" stroke-linecap="round" />
-                          <text x="50" y="58" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-style="italic" font-size="34" fill="#E24C4C" text-anchor="middle">DF</text>
-                        </svg>
-                        <div class="logo-text">
-                          <span class="logo-title">Durga Furniture</span>
-                          <span class="logo-subtitle">Coimbatore</span>
+                      <!-- Brand Logo -->
+                      <div class="brand-logo" title="Durga Furniture">
+                        <img class="header-logo-img" src="logo.png" alt="Durga Furniture Logo" width="80" height="80">
+                        <div class="logo-text logo-text-right">
+                          <span class="logo-title logo-title-large">DURGA FURNITURE</span>
                         </div>
                       </div>
-                      <!-- Nav Menu Links -->
-                      <nav class="nav-menu">
-                        <span class="nav-item active" data-route="home">Home</span>
-                        <span class="nav-item" data-route="listing" data-category="Steel Furniture">Steel Furniture</span>
-                        <span class="nav-item" data-route="listing" data-category="Wooden Furniture">Wooden Furniture</span>
-                        <span class="nav-item" data-route="listing" data-category="Other Furniture">Other Furniture</span>
-                        <span class="nav-item" data-route="about">About Us</span>
-                        <span class="nav-item" data-route="contact">Contact Us</span>
-                      </nav>
                       <!-- Utilities (Search, Wishlist) -->
                       <div class="header-utilities">
                         <button class="utility-icon-btn" onclick="routeTo('listing')" title="Search products">
@@ -107,12 +103,11 @@
                 <section class="hero-section">
                   <div class="container hero-container-row">
                     <div class="hero-content">
-                      <span class="hero-tagline">30+ Years of Manufacturing Excellence</span>
-                      <h1 class="hero-title">Experience the Art of <span>Premium Wood & Steel</span> Craftsmanship</h1>
-                      <p class="hero-desc">Directly from Coimbatore's finest furniture manufacturer. Handcrafted wooden collections and heavy-duty steel furniture built to last a lifetime.</p>
-                      <div style="display: flex; gap: 14px;">
-                        <button class="btn-gold" onclick="routeTo('listing')">Explore Collections</button>
-                        <button class="btn-outline" data-route="contact">Get A Quote</button>
+                      <h1 class="hero-big-title"><span class="word">DURGA</span><br><span class="word">FURNITURE</span></h1>
+                      <p class="hero-subtitle">MANUFACTURER OF WOODEN &amp; STEEL FURNITURE</p>
+                      <div class="hero-action-row">
+                        <button class="btn-gold" onclick="routeTo('listing')">Explore Collection</button>
+                        <button class="btn-outline" onclick="routeTo('contact')">Visit Showroom</button>
                       </div>
                     </div>
                   </div>
@@ -155,7 +150,72 @@
                     <h2 class="section-title">Featured Pieces</h2>
                   </div>
                   <div class="products-grid" id="featured-products-grid">
-                    <!-- Dynamic rendering by app.js -->
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-wooden">Wooden</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80" alt="Teak Wood Sofa Set">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Teak Furniture</span>
+                        <h3 class="product-card-title">Heritage Teak Sofa Set</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-steel">Steel</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1493666438817-866a91353ca9?auto=format&fit=crop&w=800&q=80" alt="Steel Dining Table">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Steel Dining</span>
+                        <h3 class="product-card-title">Industrial Steel Dining Table</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-wooden">Wooden</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1493666438817-866a91353ca9?auto=format&fit=crop&w=800&q=80" alt="Teak Bed Frame">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Bedroom</span>
+                        <h3 class="product-card-title">Solid Teak Bed Frame</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-other">Other</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=80" alt="Luxury Office Chair">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Office</span>
+                        <h3 class="product-card-title">Premium Office Chair</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-steel">Steel</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80" alt="Steel Cabinet">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Storage</span>
+                        <h3 class="product-card-title">Durable Steel Cabinet</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-wooden">Wooden</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80" alt="Living Room Cabinet">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Living Room</span>
+                        <h3 class="product-card-title">Classic Solid Wood Cabinet</h3>
+                      </div>
+                    </article>
                   </div>
                   <div style="text-align: center; margin-bottom: 40px;">
                     <button class="btn-outline" onclick="routeTo('listing')">View All 100+ Products</button>
@@ -356,20 +416,6 @@
                         </form>
                       </div>
                     </div>
-                    <div class="contact-social-bar">
-                      <a href="https://www.instagram.com" class="social-btn social-btn-instagram" target="_blank" rel="noreferrer">
-                        <i class="fa-brands fa-instagram"></i> Instagram
-                      </a>
-                      <a href="https://wa.me/919876543210" class="social-btn social-btn-whatsapp" target="_blank" rel="noreferrer">
-                        <i class="fa-brands fa-whatsapp"></i> WhatsApp
-                      </a>
-                      <a href="https://www.facebook.com" class="social-btn social-btn-facebook" target="_blank" rel="noreferrer">
-                        <i class="fa-brands fa-facebook-f"></i> Facebook
-                      </a>
-                      <a href="https://www.youtube.com" class="social-btn social-btn-youtube" target="_blank" rel="noreferrer">
-                        <i class="fa-brands fa-youtube"></i> YouTube
-                      </a>
-                    </div>
                   </div>
                 </section>
                 <section class="location-section">
@@ -387,6 +433,7 @@
                    PAGE VIEW: PRODUCT LISTING PAGE (CATALOG)
                    ========================================================================== -->
               <main class="view-panel" id="listing-view">
+                <button class="view-back-btn" onclick="routeTo('home')" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
                 <div class="container">
                   <div class="section-header" style="margin-bottom: 24px;">
                     <span class="section-tagline">Durga Catalog</span>
@@ -444,6 +491,7 @@
                    PAGE VIEW: PRODUCT DETAILS PAGE (AMAZON-STYLE)
                    ========================================================================== -->
               <main class="view-panel" id="details-view">
+                <button class="view-back-btn" onclick="routeTo('listing')" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
                 <div class="container details-page-wrapper">
                   
                   <!-- Breadcrumb Nav -->
@@ -481,53 +529,27 @@
                         </div>
                         <span class="reviews-count" id="details-reviews-count">(98 Customer Reviews)</span>
                       </div>
-                      <!-- Price block -->
-                      <div class="details-price-row">
-                        <div>
-                          <span class="details-price" id="details-price-tag">₹68,500</span>
-                          <span style="text-decoration: line-through; color: var(--color-text-muted); margin-left: 8px;" id="details-original-price-tag">₹79,999</span>
-                        </div>
-                        <span style="background-color: var(--color-primary-gold); color: white; padding: 2px 8px; font-size: 10px; font-weight: 700; border-radius: 4px;">DIRECT FACTORY PRICE</span>
-                      </div>
                       <!-- Short Description -->
                       <p class="details-desc" id="details-description-text">Exquisitely carved by Coimbatore master craftsmen from premium grade-A solid Teak Wood. Features high-density foam cushions upholstered in premium golden velvet fabric.</p>
-                      <!-- Specifications Sheet -->
-                      <h4 class="details-specs-title">Technical Specifications</h4>
-                      <div class="details-specs-grid">
-                        <div class="spec-item">
-                          <span class="spec-label">Dimensions</span>
-                          <span class="spec-val" id="spec-dimensions">Sofa: 34" H x 76" W x 32" D</span>
-                        </div>
-                        <div class="spec-item">
-                          <span class="spec-label">Materials</span>
-                          <span class="spec-val" id="spec-materials">Seasoned Solid Teak Wood</span>
-                        </div>
-                        <div class="spec-item">
-                          <span class="spec-label">Warranty</span>
-                          <span class="spec-val" id="spec-warranty">5 Years Structural</span>
-                        </div>
-                        <div class="spec-item">
-                          <span class="spec-label">Availability</span>
-                          <span class="spec-val" id="spec-status">In Stock (Coimbatore Factory)</span>
-                        </div>
-                      </div>
+                      <!-- Variant Pickers (Size / Mattress / Finish) -->
+                      <div class="details-variants" id="details-variants-container"></div>
+                      <!-- Material / Warranty Info Cards -->
+                      <div class="details-info-cards" id="details-info-cards"></div>
                       <!-- WhatsApp & Action CTA Panel -->
                       <div class="details-actions-bar">
-                        <!-- Direct Enquiry buttons -->
                         <button class="btn-whatsapp-cta" id="details-whatsapp-cta">
-                          <i class="fa-brands fa-whatsapp"></i> Enquire On WhatsApp
+                          <i class="fa-brands fa-whatsapp"></i> WhatsApp
                         </button>
                         <button class="btn-call-cta" id="details-call-cta">
                           <i class="fa-solid fa-phone"></i> Call Now
                         </button>
-                        
-                        <!-- Wishlist button -->
-                        <button class="details-action-circle-btn" id="details-wishlist-heart-btn" title="Add to Wishlist">
-                          <i class="fa-regular fa-heart"></i>
+                      </div>
+                      <div class="details-actions-bar-secondary">
+                        <button class="btn-request-price" id="details-request-price-btn">
+                          Request Price
                         </button>
-                        <!-- Share Button -->
-                        <button class="details-action-circle-btn" id="details-share-cta" title="Share Product Link">
-                          <i class="fa-solid fa-share-nodes"></i>
+                        <button class="btn-visit-showroom" id="details-visit-showroom-btn">
+                          <i class="fa-solid fa-location-dot"></i> Visit Showroom
                         </button>
                       </div>
                       <!-- Material accordions -->
@@ -566,6 +588,7 @@
                    PAGE VIEW: WISHLIST PAGE
                    ========================================================================== -->
               <main class="view-panel" id="wishlist-view">
+                <button class="view-back-btn" onclick="routeTo('home')" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
                 <div class="container" style="padding: 40px 24px;">
                   <div class="section-header" style="margin-top: 0; margin-bottom: 30px;">
                     <span class="section-tagline">Saved Products</span>
@@ -586,6 +609,7 @@
                    PAGE VIEW: ABOUT US
                    ========================================================================== -->
               <main class="view-panel" id="about-view">
+                <button class="view-back-btn" onclick="routeTo('home')" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
                 <div class="container" style="padding: 48px 24px;">
                   <div class="section-header" style="margin-top:0; margin-bottom: 32px;">
                     <span class="section-tagline">Factory Profile</span>
@@ -610,6 +634,7 @@
                    PAGE VIEW: CONTACT US
                    ========================================================================== -->
               <main class="view-panel" id="contact-view">
+                <button class="view-back-btn" onclick="routeTo('home')" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
                 <div class="container" style="padding: 48px 24px;">
                   <div class="section-header" style="margin-top:0; margin-bottom: 32px;">
                     <span class="section-tagline">Avinashi Road HQ</span>
@@ -664,21 +689,6 @@
                       </form>
                     </div>
                   </div>
-                  <br></br>
-                  <div class="contact-social-bar">
-                    <a href="https://www.instagram.com" class="social-btn social-btn-instagram" target="_blank" rel="noreferrer">
-                      <i class="fa-brands fa-instagram"></i> Instagram
-                    </a>
-                    <a href="https://wa.me/919876543210" class="social-btn social-btn-whatsapp" target="_blank" rel="noreferrer">
-                      <i class="fa-brands fa-whatsapp"></i> WhatsApp
-                    </a>
-                    <a href="https://www.facebook.com" class="social-btn social-btn-facebook" target="_blank" rel="noreferrer">
-                      <i class="fa-brands fa-facebook-f"></i> Facebook
-                    </a>
-                    <a href="https://www.youtube.com" class="social-btn social-btn-youtube" target="_blank" rel="noreferrer">
-                      <i class="fa-brands fa-youtube"></i> YouTube
-                    </a>
-                  </div>
                   <div class="contact-map-section">
                     <div class="location-header">
                       <h2>Our Location</h2>
@@ -693,6 +703,7 @@
                    PAGE VIEW: SECRET ADMIN DASHBOARD (STAFF PORTAL)
                    ========================================================================== -->
               <main class="view-panel" id="admin-view">
+                <button class="view-back-btn" onclick="routeTo('home')" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
                 <div class="container admin-view-container">
                   
                   <div class="admin-header-row">
@@ -807,11 +818,7 @@
                     <div>
                       <h4 class="footer-logo-title">Durga <span>Furniture</span></h4>
                       <p class="footer-desc">Coimbatore's premium steel & teak wood furniture manufacturers since 1996. Delivering lifetime durability and elegant home design aesthetics.</p>
-                      <div class="footer-social-links">
-                        <a class="footer-social-icon" href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a class="footer-social-icon" href="#"><i class="fa-brands fa-instagram"></i></a>
-                        <a class="footer-social-icon" href="#"><i class="fa-brands fa-whatsapp"></i></a>
-                      </div>
+
                     </div>
                     <div>
                       <h4 class="footer-widget-title">Quick Links</h4>
@@ -840,6 +847,25 @@
                         <button type="submit" class="footer-newsletter-btn"><i class="fa-solid fa-paper-plane"></i></button>
                       </form>
                     </div>
+                  </div>
+                  <!-- Social Media Bar -->
+                  <div class="footer-social-bar">
+                    <a href="https://www.instagram.com" class="social-link-btn social-link-instagram" target="_blank" rel="noopener noreferrer">
+                      <i class="fa-brands fa-instagram"></i>
+                      <span>Instagram</span>
+                    </a>
+                    <a href="https://wa.me/919876543210" class="social-link-btn social-link-whatsapp" target="_blank" rel="noopener noreferrer">
+                      <i class="fa-brands fa-whatsapp"></i>
+                      <span>WhatsApp</span>
+                    </a>
+                    <a href="https://www.facebook.com" class="social-link-btn social-link-facebook" target="_blank" rel="noopener noreferrer">
+                      <i class="fa-brands fa-facebook-f"></i>
+                      <span>Facebook</span>
+                    </a>
+                    <a href="https://www.youtube.com" class="social-link-btn social-link-youtube" target="_blank" rel="noopener noreferrer">
+                      <i class="fa-brands fa-youtube"></i>
+                      <span>YouTube</span>
+                    </a>
                   </div>
                   <div class="footer-bottom">
                     <span>© 2026 Durga Furniture. Avinashi Road, Coimbatore. All Rights Reserved.</span>
@@ -945,7 +971,17 @@
     <span id="toast-text">Action completed successfully</span>
   </div>
   
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/919876543210?text=Hello%20Durga%20Furniture%2C%20I%20would%20like%20to%20inquire%20about%20your%20products" 
+     target="_blank" 
+     rel="noopener noreferrer" 
+     class="whatsapp-float" 
+     title="Chat with us on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+  
   <!-- Logic scripts -->
+  <script src="products-data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

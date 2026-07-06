@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9C00"/>
+      <stop offset="100%" stop-color="#E12222"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFB248"/>
+      <stop offset="100%" stop-color="#E12A2A"/>
+    </linearGradient>
+  </defs>
+  <path d="M34 32C51 12 91 1 126 16C150 27 171 50 166 86C164 103 146 114 126 115C113 115 102 110 93 101C82 90 75 74 70 60C66 49 68 34 81 27C97 18 118 22 130 39" fill="none" stroke="url(#grad)" stroke-width="16" stroke-linecap="round"/>
+  <path d="M166 170C148 190 106 200 71 186C46 176 25 153 30 118C32 103 50 92 71 91C84 91 95 96 104 105C115 116 122 132 127 146C130 157 128 172 115 179C99 188 78 184 66 172" fill="none" stroke="url(#grad)" stroke-width="16" stroke-linecap="round"/>
+  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="82" font-weight="bold" fill="url(#textGrad)">DF</text>
+</svg>
