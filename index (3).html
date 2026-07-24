@@ -9,7 +9,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Custom Stylesheets -->
-  <link rel="stylesheet" href="style.css?v=2.5">
+  <link rel="stylesheet" href="style.css?v=2.4">
   <style>
     .emulator-container {
       -webkit-overflow-scrolling: touch;
@@ -89,7 +89,7 @@
                   <span class="mobile-nav-item" data-route="contact">Contact Us</span>
                 </div>
                 <div style="margin-top: auto; font-size: 11px; color: var(--color-text-muted);">
-                  <i class="fa-solid fa-phone"></i> +91 63690 88233<br>
+                  <i class="fa-solid fa-phone"></i> +91 98765 43210<br>
                   Coimbatore, Tamil Nadu
                 </div>
               </div>
@@ -142,6 +142,84 @@
                     </div>
                   </div>
                 </div>
+                <!-- 2. Featured Products Grid -->
+                <section class="container">
+                  <div class="section-header">
+                    <span class="section-tagline">Curated Best Sellers</span>
+                    <h2 class="section-title">Featured Pieces</h2>
+                  </div>
+                  <div class="products-grid" id="featured-products-grid">
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-wooden">Wooden</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80" alt="Teak Wood Sofa Set">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Teak Furniture</span>
+                        <h3 class="product-card-title">Heritage Teak Sofa Set</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-steel">Steel</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1493666438817-866a91353ca9?auto=format&fit=crop&w=800&q=80" alt="Steel Dining Table">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Steel Dining</span>
+                        <h3 class="product-card-title">Industrial Steel Dining Table</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-wooden">Wooden</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1493666438817-866a91353ca9?auto=format&fit=crop&w=800&q=80" alt="Teak Bed Frame">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Bedroom</span>
+                        <h3 class="product-card-title">Solid Teak Bed Frame</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-other">Other</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=80" alt="Luxury Office Chair">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Office</span>
+                        <h3 class="product-card-title">Premium Office Chair</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-steel">Steel</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80" alt="Steel Cabinet">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Storage</span>
+                        <h3 class="product-card-title">Durable Steel Cabinet</h3>
+                      </div>
+                    </article>
+                    <article class="product-card" onclick="routeTo('details')">
+                      <button class="wishlist-btn-round" title="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                      <div class="product-card-badge badge-wooden">Wooden</div>
+                      <div class="product-card-img-wrapper">
+                        <img class="product-card-img" src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80" alt="Living Room Cabinet">
+                      </div>
+                      <div class="product-card-info">
+                        <span class="product-card-category">Living Room</span>
+                        <h3 class="product-card-title">Classic Solid Wood Cabinet</h3>
+                      </div>
+                    </article>
+                  </div>
+                  <div style="text-align: center; margin-bottom: 40px;">
+                    <button class="btn-outline" onclick="routeTo('listing')">View All 100+ Products</button>
+                  </div>
+                </section>
                 <!-- 6. Why Choose Us Section -->
                 <section class="why-choose-us-section">
                   <div class="container">
@@ -178,7 +256,7 @@
                   <div class="container">
                     <div class="excellence-row">
                       <div class="excellence-left">
-                        <img src="durga_about.jpeg" alt="Durga Showroom" class="excellence-img">
+                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80" alt="Furniture Factory" class="excellence-img" onerror="this.src='https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80'">
                         <div class="excellence-badge-floating">
                           <div class="excellence-badge-number">30+</div>
                           <div class="excellence-badge-text">Years Of Crafting Legacy</div>
@@ -238,8 +316,8 @@
                         <div class="google-rating-score">4.9</div>
                         <p>Based on 256 Google reviews</p>
                       </div>
-                      <div class="google-review-cta" style="margin-top: 12px;">
-                        <a href="tel:+916369088233" class="btn-gold" style="display: inline-block; padding: 10px 20px; border-radius: 999px; text-decoration: none;">Call Now</a>
+                      <div class="google-review-cta">
+                        <a href="https://www.google.com/search?q=Durga+Furniture+Coimbatore+reviews" target="_blank" rel="noopener noreferrer">View All Google Reviews</a>
                       </div>
                     </div>
                   </div>
@@ -285,38 +363,6 @@
                         </div>
                       </div>
 
-                      <!-- Customer Gallery Card 3 -->
-                      <div class="gallery-item col-span-2 row-span-2">
-                        <img src="hap3.jpeg" alt="Happy Customer Pooja Room" class="gallery-img">
-                        <div class="gallery-item-overlay" style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; padding: 20px;">
-                          <div class="star-rating-animated" style="display: flex; gap: 6px; color: var(--color-primary-gold); font-size: 24px;">
-                            <i class="fa-solid fa-star star-animated"></i>
-                            <i class="fa-solid fa-star star-animated"></i>
-                            <i class="fa-solid fa-star star-animated"></i>
-                            <i class="fa-solid fa-star star-animated"></i>
-                            <i class="fa-solid fa-star star-animated"></i>
-                          </div>
-                          <span class="gallery-tag" style="font-size: 16px; font-weight: 700; color: var(--color-white);">Custom Pooja Room Setup</span>
-                          <span style="font-size: 12px; color: rgba(255,255,255,0.85); text-align: center; max-width: 90%; line-height: 1.4;">"Extremely pleased with the intricate carving on the wooden Pooja Mandir."</span>
-                        </div>
-                      </div>
-
-                      <!-- Customer Gallery Card 4 -->
-                      <div class="gallery-item col-span-2 row-span-2">
-                        <img src="hap4.jpeg" alt="Happy Customer Office Setup" class="gallery-img">
-                        <div class="gallery-item-overlay" style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; padding: 20px;">
-                          <div class="star-rating-animated" style="display: flex; gap: 6px; color: var(--color-primary-gold); font-size: 24px;">
-                            <i class="fa-solid fa-star star-animated"></i>
-                            <i class="fa-solid fa-star star-animated"></i>
-                            <i class="fa-solid fa-star star-animated"></i>
-                            <i class="fa-solid fa-star star-animated"></i>
-                            <i class="fa-solid fa-star star-animated"></i>
-                          </div>
-                          <span class="gallery-tag" style="font-size: 16px; font-weight: 700; color: var(--color-white);">Premium Office Furniture</span>
-                          <span style="font-size: 12px; color: rgba(255,255,255,0.85); text-align: center; max-width: 90%; line-height: 1.4;">"Perfect modular workstations and desks for our new Coimbatore office."</span>
-                        </div>
-                      </div>
-
                     </div>
                   </div>
                 </section>
@@ -339,7 +385,7 @@
                             <div class="contact-detail-icon"><i class="fa-solid fa-phone"></i></div>
                             <div class="contact-detail-text">
                               <strong>Call Enquiry Support</strong>
-                              <span>+91 63690 88233 / +91 422 254879</span>
+                              <span>+91 98765 43210 / +91 422 254879</span>
                             </div>
                           </div>
                           <div class="contact-detail-item">
@@ -585,7 +631,7 @@
                     <h2 class="section-title">About Durga Furniture</h2>
                   </div>
                   <div style="max-width: 800px; margin: 0 auto;">
-                    <img src="durga_about.jpeg" alt="Durga Showroom" style="width: 100%; height: 320px; object-fit: cover; border-radius: var(--border-radius-md); margin-bottom: 24px; border: 1px solid var(--color-beige-border);">
+                    <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80" alt="Durga Factory" style="width: 100%; height: 320px; object-fit: cover; border-radius: var(--border-radius-md); margin-bottom: 24px; border: 1px solid var(--color-beige-border);">
                     <h3 style="margin-bottom: 14px;">Avinashi Road's Premier Furniture Pioneer</h3>
                     <p style="color: var(--color-text-muted); margin-bottom: 16px;">Founded in Coimbatore in 1996, Durga Furniture has set the standard for premium residential and commercial furniture. Operating our own integrated wooden seasoning and steel tube fabrication factories, we deliver highest durability directly to home owners and commercial offices.</p>
                     
@@ -633,7 +679,7 @@
                           <div class="contact-detail-icon"><i class="fa-solid fa-phone-volume"></i></div>
                           <div class="contact-detail-text">
                             <strong>Instant Phone Connect</strong>
-                            <span>+91 63690 88233 / +91 422 254879</span>
+                            <span>+91 98765 43210 / +91 422 254879</span>
                           </div>
                         </div>
                       </div>
@@ -819,19 +865,19 @@
                   </div>
                   <!-- Social Media Bar -->
                   <div class="footer-social-bar">
-                    <a href="https://www.instagram.com/durga_furniture727?igsh=ZmtnYjg5Z3J4bHNm" class="social-link-btn social-link-instagram" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.instagram.com" class="social-link-btn social-link-instagram" target="_blank" rel="noopener noreferrer">
                       <i class="fa-brands fa-instagram"></i>
                       <span>Instagram</span>
                     </a>
-                    <a href="https://wa.me/916369088233" class="social-link-btn social-link-whatsapp" target="_blank" rel="noopener noreferrer">
+                    <a href="https://wa.me/919876543210" class="social-link-btn social-link-whatsapp" target="_blank" rel="noopener noreferrer">
                       <i class="fa-brands fa-whatsapp"></i>
                       <span>WhatsApp</span>
                     </a>
-                    <a href="https://www.facebook.com/profile.php?id=61553657531712" class="social-link-btn social-link-facebook" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.facebook.com" class="social-link-btn social-link-facebook" target="_blank" rel="noopener noreferrer">
                       <i class="fa-brands fa-facebook-f"></i>
                       <span>Facebook</span>
                     </a>
-                    <a href="https://youtube.com/@DURGASTEEL727?si=Mrw3KOjE6_pX2Kw8" class="social-link-btn social-link-youtube" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.youtube.com" class="social-link-btn social-link-youtube" target="_blank" rel="noopener noreferrer">
                       <i class="fa-brands fa-youtube"></i>
                       <span>YouTube</span>
                     </a>
@@ -893,25 +939,19 @@
               </select>
             </div>
           </div>
-          <div class="form-group" id="admin-prod-series-group" style="margin-bottom: 12px; display: none;">
-            <label>Series Number</label>
-            <select id="admin-prod-series" class="form-control">
-              <!-- Dynamically populated options -->
-            </select>
-          </div>
           <div class="form-row-2">
             <div class="form-group" style="margin-bottom: 12px;">
               <label>Price (₹ INR)</label>
               <input type="number" id="admin-prod-price" class="form-control" placeholder="E.g. 18500" required>
             </div>
             <div class="form-group" style="margin-bottom: 12px;">
-              <label>Product Image Upload</label>
-              <div style="display: flex; gap: 8px;">
-                <button type="button" class="btn-gold" id="admin-cloudinary-upload-btn" style="padding: 0 12px; height: 38px; font-size:11px; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
-                  <i class="fa-solid fa-camera"></i> Upload
-                </button>
-                <input type="text" id="admin-prod-image-url" class="form-control" placeholder="Image URL (auto-filled)" required readonly>
-              </div>
+              <label>Simulated Image (Mock)</label>
+              <select id="admin-prod-img" class="form-control" required>
+                <option value="sofa">Teak Sofa Set Graphic</option>
+                <option value="almirah">Steel Almirah Graphic</option>
+                <option value="dining">Teak Dining Set Graphic</option>
+                <option value="chair">Ergonomic Office Chair Graphic</option>
+              </select>
             </div>
           </div>
           <div class="form-group" style="margin-bottom: 12px;">
@@ -948,7 +988,7 @@
   
   <!-- WhatsApp Floating Button -->
   <!-- WhatsApp Floating Button -->
-  <a href="https://wa.me/916369088233?text=Hello%20Durga%20Furniture%2C%20I%20would%20like%20to%20inquire%20about%20your%20products" 
+  <a href="https://wa.me/919876543210?text=Hello%20Durga%20Furniture%2C%20I%20would%20like%20to%20inquire%20about%20your%20products" 
      target="_blank" 
      rel="noopener noreferrer" 
      class="whatsapp-floating-btn" 
@@ -966,7 +1006,6 @@
   </div>
 
   <!-- Logic scripts -->
-  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
   <script src="products-data.js?v=2.4"></script>
   <script src="app.js?v=2.4"></script>
 </body>
