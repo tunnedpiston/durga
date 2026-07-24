@@ -2855,10 +2855,10 @@ textarea.form-control {
     align-items: center;
   }
   .utility-icon-btn {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     font-size: 16px;
-    padding: 6px;
+    padding: 8px;
   }
   .utility-badge { top: -6px; right: -6px; width: 14px; height: 14px; font-size: 9px; }
 
@@ -2870,8 +2870,8 @@ textarea.form-control {
     transform: none;
     background-color: transparent;
     box-shadow: none;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2880,6 +2880,13 @@ textarea.form-control {
   /* Ensure nav-menu collapses and mobile panel works */
   .nav-menu { display: none !important; }
   .mobile-nav-panel { width: 86vw; max-width: 360px; }
+
+  /* Increase mobile nav touch targets and spacing */
+  .mobile-nav-item {
+    min-height: 44px;
+    padding: 12px 8px;
+    font-size: 15px;
+  }
 
   /* Hero section: reduce height, make content full width and centered */
   .hero-section {
@@ -2920,6 +2927,14 @@ textarea.form-control {
   .gallery-item { min-height: 120px; }
   .gallery-img { width: 100%; height: 100%; object-fit: cover; }
 
+  /* Make media elements generally responsive on mobile */
+  img, picture, video, iframe, svg {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
   /* Testimonials and other text scale down */
   .testimonial-text { font-size: 14px; }
   .section-title { font-size: 22px; }
@@ -2931,11 +2946,30 @@ textarea.form-control {
   /* Contact map: reduce iframe height */
   .map-card iframe { min-height: 220px; }
 
+  /* Ensure modals and popups fit inside viewport */
+  .modal-container {
+    max-width: 95vw;
+    width: 95vw;
+    max-height: 95vh;
+    margin: 0 10px;
+  }
+
   /* Catalog layout becomes single column */
   .catalog-layout { grid-template-columns: 1fr !important; }
   .filter-sidebar { display: none !important; }
   .catalog-search-wrapper { width: 100%; }
   .catalog-search-input { padding-left: 36px; }
+
+  /* Make form controls full-width and comfortable on mobile */
+  .form-row-2 { grid-template-columns: 1fr !important; }
+  .form-control, .footer-newsletter-input { width: 100%; box-sizing: border-box; }
+
+  /* Footer adjustments */
+  .footer-newsletter-form { flex-direction: column; gap: 8px; }
+  .footer-newsletter-btn { width: 100%; border-radius: 8px; }
+
+  /* Avoid fixed 100vw elements inside containers (safety) */
+  .exit-fullscreen-floating, .whatsapp-floating-btn { right: 12px !important; bottom: 12px !important; }
 
   /* Product details: stack gallery and info */
   .details-main-row { grid-template-columns: 1fr !important; gap: 20px; }
