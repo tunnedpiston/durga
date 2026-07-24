@@ -3779,3 +3779,69 @@ textarea.form-control {
   letter-spacing: 0.5px;
 }
 
+/* ==========================================================================
+   REAL DEVICE MOBILE FIXES
+   (These target actual phone viewports directly — not gated behind the
+   .simulated-mobile class, which only gets added inside the Figma-style
+   simulator tool and never on the live site.)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* 1. Hide the truncated "D.." brand name next to the header logo icon.
+        The icon alone is enough on small screens. */
+  .header-main .logo-text {
+    display: none !important;
+  }
+
+  /* 2. Shrink the "30+ Years" floating badge so it stays inside the image
+        instead of spilling off the right edge of the screen. */
+  .excellence-badge-floating {
+    width: 84px !important;
+    padding: 8px !important;
+    right: 8px !important;
+    bottom: 8px !important;
+    border-width: 1px !important;
+  }
+  .excellence-badge-number {
+    font-size: 20px !important;
+  }
+  .excellence-badge-text {
+    font-size: 7px !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  /* 3. Make sure the details-page action buttons and spec values can never
+        push wider than the screen. Stack WhatsApp / Call Now instead of
+        squeezing them side by side, and let long spec text wrap. */
+  .details-actions-bar {
+    flex-direction: column !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+  }
+  .btn-whatsapp-cta,
+  .btn-call-cta {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 14px !important;
+    height: 46px !important;
+  }
+  .details-actions-bar-secondary {
+    min-width: 0 !important;
+  }
+  .btn-request-price,
+  .btn-visit-showroom,
+  .btn-add-wishlist {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 13px !important;
+  }
+  .details-info-cards,
+  .info-card {
+    min-width: 0 !important;
+  }
+  .info-card-value {
+    white-space: normal !important;
+    word-break: break-word !important;
+    font-size: 12.5px !important;
+  }
+}
+
