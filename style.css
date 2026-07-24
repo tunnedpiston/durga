@@ -819,8 +819,9 @@ h1, h2, h3, h4, h5, h6 {
 .mobile-nav-panel {
   position: fixed;
   top: 0;
-  right: -100%;
+  right: 0;
   width: 280px;
+  max-width: 86vw;
   height: 100%;
   background-color: var(--color-bg-cream);
   z-index: 1000;
@@ -829,10 +830,12 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  box-sizing: border-box;
 }
 .mobile-nav-panel.open {
-  right: 0;
+  transform: translateX(0);
 }
 .mobile-nav-header {
   display: flex;
@@ -2798,6 +2801,18 @@ textarea.form-control {
 }
 
 /* ==========================================================================
+   TABLET-RANGE SAFETY (769px - 1024px): neutralize desktop-only negative
+   offsets so real tablets in this gap can't get pulled into horizontal
+   overflow before the 768px mobile rules below take over.
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .hero-content {
+    margin-left: 0 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
    MOBILE FIXES: Global rules for phones/tablets under 768px
    ========================================================================== */
 @media (max-width: 768px) {
@@ -3821,8 +3836,14 @@ textarea.form-control {
   .btn-call-cta {
     width: 100% !important;
     min-width: 0 !important;
-    font-size: 14px !important;
-    height: 46px !important;
+    font-size: 17px !important;
+    height: 56px !important;
+    border-radius: 28px !important;
+    font-weight: 700 !important;
+  }
+  .btn-whatsapp-cta i,
+  .btn-call-cta i {
+    font-size: 19px !important;
   }
   .details-actions-bar-secondary {
     min-width: 0 !important;
@@ -3844,4 +3865,3 @@ textarea.form-control {
     font-size: 12.5px !important;
   }
 }
-
