@@ -48,7 +48,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
 }
 /* Scrollbar Styles */
 ::-webkit-scrollbar {
@@ -72,7 +72,7 @@ body {
   display: grid;
   grid-template-rows: 48px 1fr;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   background-color: #1E1E1E;
 }
 /* Figma Header/Toolbar */
@@ -2812,7 +2812,7 @@ textarea.form-control {
   /* Prevent accidental horizontal overflow */
   html, body, .emulator-container, .durga-website-app {
     width: 100%;
-    max-width: 100vw;
+    max-width: 100%;
     overflow-x: hidden;
   }
 
@@ -2847,7 +2847,7 @@ textarea.form-control {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .logo-text { max-width: calc(100vw - 160px); }
+  .logo-text { max-width: calc(100% - 160px); }
 
   /* Utilities: smaller icons and move hamburger to end */
   .header-utilities {
@@ -2895,10 +2895,11 @@ textarea.form-control {
   }
   .hero-background-image { display: none; }
   .hero-content {
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 6px;
-    transform: none;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 6px !important;
+    transform: none !important;
+    margin-left: 0 !important;
     text-align: center;
   }
   .hero-big-title { font-size: 34px; line-height: 1.05; }
@@ -3335,7 +3336,7 @@ textarea.form-control {
   html, body {
     overflow-x: hidden !important;
     max-width: 100% !important;
-    width: 100vw !important;
+    width: 100% !important;
   }
   .durga-website-app {
     max-width: 100% !important;
@@ -3406,6 +3407,15 @@ textarea.form-control {
     grid-column: 1 !important;
     justify-self: start !important;
     position: static !important;
+
+  }
+  /* Ensure emulator/frame use full width inside the figma canvas on mobile */
+  .emulator-frame-wrapper, .emulator-container, .durga-website-app {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
     transform: none !important;
     display: flex !important;
   }
