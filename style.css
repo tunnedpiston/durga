@@ -724,9 +724,6 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 28px;
   letter-spacing: 1px;
 }
-  color: var(--color-primary-gold);
-  font-weight: 600;
-}
 /* Nav Menu */
 .nav-menu {
   display: none;
@@ -2533,6 +2530,7 @@ textarea.form-control {
 }
 .footer-social-icon {
   display: none;
+}
 .footer-widget-title {
   color: var(--color-white);
   font-size: 13px;
@@ -3407,7 +3405,8 @@ textarea.form-control {
     grid-column: 1 !important;
     justify-self: start !important;
     position: static !important;
-
+    transform: none !important;
+    display: flex !important;
   }
   /* Ensure emulator/frame use full width inside the figma canvas on mobile */
   .emulator-frame-wrapper, .emulator-container, .durga-website-app {
@@ -3415,9 +3414,6 @@ textarea.form-control {
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-  }
-    transform: none !important;
-    display: flex !important;
   }
 
   /* Content view padding offset */
