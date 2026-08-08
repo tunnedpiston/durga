@@ -2722,7 +2722,9 @@ textarea.form-control {
   grid-template-columns: 1fr;
 }
 .durga-website-app.simulated-tablet .filter-sidebar {
-  display: none;
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
 }
 .durga-website-app.simulated-tablet .details-main-row {
   grid-template-columns: 1fr;
@@ -2979,7 +2981,7 @@ textarea.form-control {
 
   /* Catalog layout becomes single column */
   .catalog-layout { grid-template-columns: 1fr !important; }
-  .filter-sidebar { display: none !important; }
+  .filter-sidebar { display: block !important; width: 100% !important; margin-bottom: 16px !important; }
   .catalog-search-wrapper { width: 100%; }
   .catalog-search-input { padding-left: 36px; }
 
@@ -3010,7 +3012,9 @@ textarea.form-control {
   grid-template-columns: 1fr;
 }
 .durga-website-app.simulated-mobile .filter-sidebar {
-  display: none;
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
 }
 .durga-website-app.simulated-mobile .catalog-toolbar {
   flex-direction: column;
@@ -3211,7 +3215,9 @@ textarea.form-control {
     grid-template-columns: 1fr;
   }
   #figma-workspace.fullscreen-mode .filter-sidebar {
-    display: none;
+    display: block;
+    width: 100%;
+    margin-bottom: 16px;
   }
   #figma-workspace.fullscreen-mode .details-main-row {
     grid-template-columns: 1fr;
