@@ -231,6 +231,7 @@ function getProductSeriesNumber(product) {
   if (product.category === 'Other Furniture') {
     if (id.includes('stool')) return '1';
     if (id.includes('locker') || id.includes('almirah')) return '2';
+    if (id.includes('table') || id.includes('office') || id.includes('series3')) return '3';
     return '1';
   }
   
@@ -252,18 +253,10 @@ function createProductCard(product) {
     `;
   }
 
-  const isWishlisted = wishlist.includes(product.id);
-  const roundHeartClass = isWishlisted ? 'wishlist-btn-round liked' : 'wishlist-btn-round';
-  const roundHeartIcon = isWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-  const textBtnClass = isWishlisted ? 'btn-add-wishlist wishlisted-active' : 'btn-add-wishlist';
-  const textBtnIcon = isWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-  const textBtnLabel = isWishlisted ? 'Wishlisted' : 'Add to Wishlist';
-
-  const seriesNum = getProductSeriesNumber(product);
+   const seriesNum = getProductSeriesNumber(product);
   const seriesLabel = seriesNum ? ` &bull; Series ${seriesNum}` : '';
 
   card.innerHTML = `
-    <button class="${roundHeartClass}" title="Add to wishlist"><i class="${roundHeartIcon}"></i></button>
     <div class="product-card-badge ${product.badge}">${product.category.split(' ')[0]}</div>
     <div class="product-card-img-wrapper">
       <img class="product-card-img" src="${product.image}" alt="${product.title}" onerror="this.onerror=null; this.src='${getProductFallbackImage(product.category)}';">
@@ -272,11 +265,10 @@ function createProductCard(product) {
       <span class="product-card-category">${product.category}${seriesLabel}</span>
       <h3 class="product-card-title">${product.title}</h3>
       ${priceHtml}
-      <div class="product-card-cta-row" style="margin-top: auto; padding-top: 12px; display: flex; flex-direction: column; gap: 8px; width: 100%;">
-        <button class="${textBtnClass}" style="width: 100% !important; justify-content: center !important; height: 32px !important; padding: 6px 12px !important;">
-          <i class="${textBtnIcon}"></i> <span class="wishlist-btn-label">${textBtnLabel}</span>
+      <div class="product-card-cta-row" style="margin-top: auto; padding-top: 12px; width: 100%;">
+        <button class="btn-gold" style="pointer-events: none; width: 100% !important; justify-content: center !important; height: 36px !important; font-size: 13px !important; display: flex; align-items: center; gap: 6px; border-radius: 6px;">
+          <span>View Details</span> <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i>
         </button>
-        <span class="btn-text" style="font-size: 11px; padding: 4px 0 0 0; cursor: pointer; text-align: center; display: block; width: 100%;">View Details <i class="fa-solid fa-arrow-right"></i></span>
       </div>
     </div>
   `;
@@ -284,18 +276,6 @@ function createProductCard(product) {
   card.addEventListener('click', () => {
     showProductDetails(product);
     routeTo('details');
-  });
-
-  const wishlistButton = card.querySelector('.wishlist-btn-round');
-  wishlistButton?.addEventListener('click', (event) => {
-    event.stopPropagation();
-    toggleWishlist(product.id);
-  });
-
-  const wishlistTextButton = card.querySelector('.btn-add-wishlist');
-  wishlistTextButton?.addEventListener('click', (event) => {
-    event.stopPropagation();
-    toggleWishlist(product.id);
   });
 
   return card;
@@ -315,15 +295,33 @@ function renderProducts(productList, container) {
 
 function renderFeaturedProducts() {
   if (!featuredProductsGrid) return;
-  const featured = productData.filter((product) => {
-    if (product.category === 'Steel Furniture') {
-      return OUTSIDE_STEEL_IDS.includes(product.id);
+  
+  // Group products to select one representative per series to avoid duplicate variants
+  const representatives = [];
+  const seriesGroups = {};
+  
+  // Sort to prioritize items that have main images
+  const sortedForRep = [...productData].sort((a, b) => {
+    const hasAImg = a.image_url && !a.image_url.includes('placeholder') && !a.image_url.includes('logo.png');
+    const hasBImg = b.image_url && !b.image_url.includes('placeholder') && !b.image_url.includes('logo.png');
+    if (hasAImg && !hasBImg) return -1;
+    if (!hasAImg && hasBImg) return 1;
+    return 0;
+  });
+
+  sortedForRep.forEach(p => {
+    if (!p.series) return;
+    const seriesKey = `${p.category}|${p.series}`;
+    if (!seriesGroups[seriesKey]) {
+      seriesGroups[seriesKey] = p;
+      representatives.push(p);
     }
-    if (product.category === 'Wooden Furniture') {
-      return OUTSIDE_WOODEN_IDS.includes(product.id);
-    }
-    return product.category !== 'Other Furniture';
-  }).slice(0, 6);
+  });
+
+  const wooden = representatives.filter(p => p.category === 'Wooden Furniture').slice(0, 3);
+  const steel = representatives.filter(p => p.category === 'Steel Furniture').slice(0, 3);
+  const other = representatives.filter(p => p.category === 'Other Furniture').slice(0, 2);
+  const featured = [...wooden, ...steel, ...other];
   renderProducts(featured, featuredProductsGrid);
 }
 
@@ -344,20 +342,12 @@ function sortProducts(products, sortKey) {
       return sorted.sort((a, b) => b.price - a.price);
     default:
       return sorted.sort((a, b) => {
-        if (a.category === 'Wooden Furniture' && b.category === 'Wooden Furniture') {
-          const aIdx = OUTSIDE_WOODEN_IDS.indexOf(a.id);
-          const bIdx = OUTSIDE_WOODEN_IDS.indexOf(b.id);
-          if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
-        }
-        if (a.category === 'Steel Furniture' && b.category === 'Steel Furniture') {
-          const aIdx = OUTSIDE_STEEL_IDS.indexOf(a.id);
-          const bIdx = OUTSIDE_STEEL_IDS.indexOf(b.id);
-          if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
-        }
-        if (a.category === 'Other Furniture' && b.category === 'Other Furniture') {
-          const aIdx = OUTSIDE_OTHER_IDS.indexOf(a.id);
-          const bIdx = OUTSIDE_OTHER_IDS.indexOf(b.id);
-          if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+        if (a.category === b.category) {
+          const aSeries = parseInt(getProductSeriesNumber(a)) || 999;
+          const bSeries = parseInt(getProductSeriesNumber(b)) || 999;
+          if (aSeries !== bSeries) {
+            return aSeries - bSeries;
+          }
         }
         return 0;
       });
@@ -372,18 +362,29 @@ function filterCatalog() {
 
   let filteredProducts = [...productData];
   
-  // Filter out non-outside steel, wooden, and other products from the main catalog list
+  // Group products by category and series to find one representative per series dynamically
+  const representatives = [];
+  const seriesGroups = {};
+  
+  const sortedForRep = [...productData].sort((a, b) => {
+    const isAOutside = OUTSIDE_STEEL_IDS.includes(a.id) || OUTSIDE_WOODEN_IDS.includes(a.id) || OUTSIDE_OTHER_IDS.includes(a.id);
+    const isBOutside = OUTSIDE_STEEL_IDS.includes(b.id) || OUTSIDE_WOODEN_IDS.includes(b.id) || OUTSIDE_OTHER_IDS.includes(b.id);
+    if (isAOutside && !isBOutside) return -1;
+    if (!isAOutside && isBOutside) return 1;
+    return 0;
+  });
+
+  sortedForRep.forEach(p => {
+    if (!p.series) return;
+    const seriesKey = `${p.category}|${p.series}`;
+    if (!seriesGroups[seriesKey]) {
+      seriesGroups[seriesKey] = p;
+      representatives.push(p.id);
+    }
+  });
+
   filteredProducts = filteredProducts.filter((product) => {
-    if (product.category === 'Steel Furniture') {
-      return OUTSIDE_STEEL_IDS.includes(product.id);
-    }
-    if (product.category === 'Wooden Furniture') {
-      return OUTSIDE_WOODEN_IDS.includes(product.id);
-    }
-    if (product.category === 'Other Furniture') {
-      return OUTSIDE_OTHER_IDS.includes(product.id);
-    }
-    return true;
+    return representatives.includes(product.id);
   });
 
   if (activeCategories.length) {
@@ -456,6 +457,41 @@ function renderProductVariants(product, sizeOptions) {
   }
 }
 
+function formatDimensionsHtml(dimStr) {
+  if (!dimStr) return '';
+  const groups = dimStr.split('|');
+  let html = '<div class="formatted-dimensions" style="display: flex; flex-direction: column; gap: 8px; text-align: left; line-height: 1.4;">';
+  
+  groups.forEach((group) => {
+    group = group.trim();
+    if (!group) return;
+    
+    let label = '';
+    let sizeListStr = group;
+    const colonIndex = group.indexOf(':');
+    if (colonIndex !== -1) {
+      label = group.substring(0, colonIndex + 1).trim();
+      sizeListStr = group.substring(colonIndex + 1).trim();
+    }
+    
+    const sizes = sizeListStr.split('/').map(s => s.trim()).filter(s => s);
+    if (sizes.length > 0) {
+      html += '<div class="dimension-group" style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px;">';
+      
+      const firstLineText = label ? `<strong style="color: var(--color-maroon); font-weight: 700;">${label}</strong> ${sizes[0]}` : sizes[0];
+      html += `<div class="dimension-line">${firstLineText}</div>`;
+      
+      for (let i = 1; i < sizes.length; i++) {
+        html += `<div class="dimension-line" style="padding-left: ${label ? '12px' : '0'}; color: var(--color-text-muted);">${sizes[i]}</div>`;
+      }
+      html += '</div>';
+    }
+  });
+  
+  html += '</div>';
+  return html;
+}
+
 function renderProductInfoCards(product, hasSizeOptions) {
   const container = document.getElementById('details-info-cards');
   if (!container) return;
@@ -465,7 +501,6 @@ function renderProductInfoCards(product, hasSizeOptions) {
   if (product.dimensions) {
     cards.push(['Dimensions', product.dimensions]);
   }
-  cards.push(['Material', product.materials || 'Premium quality materials']);
 
   cards.forEach(([label, value]) => {
     const card = document.createElement('div');
@@ -475,7 +510,11 @@ function renderProductInfoCards(product, hasSizeOptions) {
     labelSpan.textContent = label;
     const valueSpan = document.createElement('span');
     valueSpan.className = 'info-card-value';
-    valueSpan.textContent = value;
+    if (label === 'Dimensions') {
+      valueSpan.innerHTML = formatDimensionsHtml(value);
+    } else {
+      valueSpan.textContent = value;
+    }
     card.appendChild(labelSpan);
     card.appendChild(valueSpan);
     container.appendChild(card);
@@ -525,94 +564,130 @@ function getWoodenSubtype(product) {
   return 'other';
 }
 
-function renderRelatedProducts(currentProduct) {
+async function showProductDetailsBySlug(slug) {
+  try {
+    const res = await fetch(`${API_URL}/products/${slug}/`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      showProductDetails(data);
+      routeTo('details');
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function renderRelatedProducts(currentProduct) {
   const container = document.getElementById('related-products-carousel');
   if (!container) return;
   
   const relatedTitle = document.querySelector('#details-view h3.details-specs-title');
-  
-  let related = [];
-  if (currentProduct.category === 'Steel Furniture') {
-    const seriesNum = getProductSeriesNumber(currentProduct);
-    let title = 'Other Steel Products';
-    if (seriesNum === '1') title = 'Other Steel Almirahs';
-    else if (seriesNum === '2') title = 'Other Steel Cots';
-    else if (seriesNum === '3') title = 'Other Steel Tables';
-    else if (seriesNum === '4') title = 'Other Steel Racks & Trolleys';
-    else if (seriesNum === '5') title = 'Other Steel Bookshelves';
-    
-    if (relatedTitle) relatedTitle.textContent = title;
-    
-    related = productData.filter((p) => {
-      return p.category === 'Steel Furniture' && p.id !== currentProduct.id && getProductSeriesNumber(p) === seriesNum;
-    });
-  } else if (currentProduct.category === 'Wooden Furniture') {
-    const seriesNum = getProductSeriesNumber(currentProduct);
-    let title = 'Other Wooden Products';
-    if (seriesNum === '1') title = 'Other Wooden Wardrobes';
-    else if (seriesNum === '2') title = 'Other Wooden TV Units';
-    else if (seriesNum === '3') title = 'Other Wooden Pooja Mandirs';
-    else if (seriesNum === '4') title = 'Other Wooden Cots';
-    else if (seriesNum === '5') title = 'Other Wooden Dressing Tables';
-    else if (seriesNum === '6') title = 'Other Wooden Office Desks';
-    else if (seriesNum === '7') title = 'Other Wooden Dining Tables';
-    else if (seriesNum === '8') title = 'Other Wooden Sofas';
-    
-    if (relatedTitle) relatedTitle.textContent = title;
-    
-    related = productData.filter((p) => {
-      return p.category === 'Wooden Furniture' && p.id !== currentProduct.id && getProductSeriesNumber(p) === seriesNum;
-    });
-  } else if (currentProduct.category === 'Other Furniture') {
-    const seriesNum = getProductSeriesNumber(currentProduct);
-    let title = 'Other Furniture Products';
-    if (seriesNum === '1') title = 'Other Premium Stools';
-    else if (seriesNum === '2') title = 'Other Lockers & Safes';
-    
-    if (relatedTitle) relatedTitle.textContent = title;
-    
-    related = productData.filter((p) => {
-      return p.category === 'Other Furniture' && p.id !== currentProduct.id && getProductSeriesNumber(p) === seriesNum;
-    });
-  } else {
-    if (relatedTitle) relatedTitle.textContent = 'Related Products';
-    // Normal behavior: other products in same category, up to 4 randomly
-    related = productData.filter((p) => p.id !== currentProduct.id && p.category === currentProduct.category);
-    related = related.sort(() => 0.5 - Math.random()).slice(0, 4);
+  const seriesNum = getProductSeriesNumber(currentProduct);
+  const category = currentProduct.category_name || currentProduct.category;
+
+  if (relatedTitle) {
+    relatedTitle.textContent = "Color / Finish Gallery";
   }
-  
-  container.innerHTML = '';
-  related.forEach((product) => {
-    container.appendChild(createProductCard(product));
-  });
+
+  container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Loading gallery...</p>';
+
+  try {
+    // Fetch variants from the API
+    let url = `${API_URL}/products/?category=${encodeURIComponent(category)}&series=${seriesNum}`;
+    const res = await fetch(url, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      
+      container.innerHTML = '';
+      if (data.length === 0) {
+        container.innerHTML = '<p class="no-related" style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">No variants found.</p>';
+      } else {
+        // Render each variant as a plain image card
+        data.forEach((variant) => {
+          const card = document.createElement('div');
+          card.className = 'variant-gallery-card';
+          card.style.cssText = 'cursor: pointer; border: 2px solid var(--color-border); border-radius: 8px; overflow: hidden; background: var(--color-bg-cream); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;';
+          card.innerHTML = `<img src="${variant.image_url}" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.src='logo.png';">`;
+          
+          card.onmouseenter = () => card.style.borderColor = 'var(--color-gold)';
+          card.onmouseleave = () => card.style.borderColor = 'var(--color-border)';
+
+          card.onclick = () => {
+            showProductDetailsBySlug(variant.slug || variant.id);
+          };
+          container.appendChild(card);
+        });
+      }
+    } else {
+      throw new Error("Failed to fetch variants");
+    }
+  } catch (err) {
+    console.error("Error fetching variants from API:", err);
+    container.innerHTML = '<p class="no-related" style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Could not load gallery.</p>';
+  }
 }
 
 function showProductDetails(product) {
   if (!product) return;
+  
+  // If product is a Django catalogue product without variants or type defined, load details
+  if (product.isFromDjango && !product.variants && product.type !== 'variant' && product.type !== 'series') {
+    showProductDetailsBySlug(product.database_id || product.id);
+    return;
+  }
+
   // Reset scroll to top of page
   window.scrollTo(0, 0);
   
-  const seriesNum = getProductSeriesNumber(product);
-  const seriesSuffix = seriesNum ? ` — Series ${seriesNum}` : '';
+  const mainRow = document.querySelector('.details-main-row');
+  const detailsInfo = document.querySelector('.details-info');
+  const recommendationsTitle = document.querySelector('#details-view h3.details-specs-title');
+  const recommendationsContainer = document.getElementById('related-products-carousel');
 
-  if (detailsTitleText) detailsTitleText.textContent = product.title;
+  const isVariant = (product.type === 'variant');
+
+  if (isVariant) {
+    // Hide details specifications panel
+    if (detailsInfo) detailsInfo.style.display = 'none';
+    if (mainRow) mainRow.classList.add('variant-only-view');
+    
+    // Hide recommendations/variant strip
+    if (recommendationsTitle) recommendationsTitle.style.display = 'none';
+    if (recommendationsContainer) recommendationsContainer.style.display = 'none';
+    
+    // Breadcrumbs
+    if (detailsCrumbCategory) {
+      detailsCrumbCategory.innerHTML = `<span style="cursor: pointer;" onclick="routeTo('listing', '${product.category_name}')">${product.category_name}</span> / <span style="cursor: pointer; text-decoration: underline; color: var(--color-maroon);" onclick="showProductDetailsBySlug('${product.series_slug}')">${product.series_name}</span>`;
+    }
+    if (detailsCrumbTitle) detailsCrumbTitle.textContent = product.color_label || 'Variant';
+  } else {
+    // Show details specifications panel
+    if (detailsInfo) detailsInfo.style.display = 'block';
+    if (mainRow) mainRow.classList.remove('variant-only-view');
+    
+    // Show recommendations/variant strip
+    if (recommendationsTitle) recommendationsTitle.style.display = 'block';
+    if (recommendationsContainer) recommendationsContainer.style.display = 'grid';
+    
+    // Breadcrumbs
+    const seriesNum = getProductSeriesNumber(product);
+    const seriesSuffix = seriesNum ? ` — Series ${seriesNum}` : '';
+    if (detailsCrumbCategory) {
+      detailsCrumbCategory.innerHTML = `<span style="cursor: pointer;" onclick="routeTo('listing', '${product.category}')">${product.category}</span> / <span>Series ${product.series}</span>`;
+    }
+    if (detailsCrumbTitle) detailsCrumbTitle.textContent = product.title;
+  }
+
+  if (detailsTitleText) detailsTitleText.textContent = product.title || product.name;
   if (detailsDescriptionText) detailsDescriptionText.textContent = product.description;
-  if (detailsCrumbCategory) detailsCrumbCategory.textContent = product.category + seriesSuffix;
-  if (detailsCrumbTitle) detailsCrumbTitle.textContent = product.title;
+  
+  const imgUrl = product.image_url || product.image || 'logo.png';
   if (detailsMainViewImage) {
-    detailsMainViewImage.src = product.image;
-    // Set default style to cover first
-    detailsMainViewImage.style.objectFit = 'cover';
-    detailsMainViewImage.onload = () => {
-      // If the image is vertical (portrait), change to contain to avoid cropping
-      const isPortrait = detailsMainViewImage.naturalHeight > detailsMainViewImage.naturalWidth;
-      if (isPortrait) {
-        detailsMainViewImage.style.objectFit = 'contain';
-      }
-    };
+    detailsMainViewImage.src = imgUrl;
+    detailsMainViewImage.style.objectFit = 'contain';
     detailsMainViewImage.onerror = () => {
       detailsMainViewImage.onerror = null;
-      detailsMainViewImage.src = getProductFallbackImage(product.category);
+      detailsMainViewImage.src = getProductFallbackImage(product.category || product.category_name);
     };
   }
 
@@ -621,15 +696,13 @@ function showProductDetails(product) {
   const zoomOverlay = document.getElementById('details-zoom-overlay');
   
   if (mainImageWrapper) {
-    // Open full image lightbox on click
     mainImageWrapper.onclick = () => {
-      openLightbox(product.image, product.title);
+      openLightbox(imgUrl, product.title || product.name);
     };
 
-    // Zoom lens on hover
     if (zoomOverlay) {
       mainImageWrapper.onmouseenter = () => {
-        zoomOverlay.style.backgroundImage = `url('${product.image}')`;
+        zoomOverlay.style.backgroundImage = `url('${imgUrl}')`;
       };
       mainImageWrapper.onmousemove = (e) => {
         const rect = mainImageWrapper.getBoundingClientRect();
@@ -641,57 +714,60 @@ function showProductDetails(product) {
       };
     }
   }
-  if (detailsCategoryBadge) detailsCategoryBadge.textContent = product.category + seriesSuffix;
-  const sizeOptions = buildSizeOptions(product);
-  renderProductVariants(product, sizeOptions);
-  renderProductInfoCards(product, !!(sizeOptions && sizeOptions.length));
-  
-  // Render related products recommendation
-  renderRelatedProducts(product);
 
-  // Hook up CTA buttons
-  const whatsappCta = document.getElementById('details-whatsapp-cta');
-  if (whatsappCta) {
-    whatsappCta.onclick = () => {
-      const text = encodeURIComponent(`Hi Durga Furniture, I am interested in learning more about "${product.title}" (${product.category}).`);
-      window.open(`https://wa.me/916389088233?text=${text}`, '_blank');
-    };
-  }
-
-  const callCta = document.getElementById('details-call-cta');
-  if (callCta) {
-    callCta.onclick = () => {
-      window.location.href = 'tel:+916389088233';
-    };
-  }
-
-  // Hook up Details page Wishlist button
-  const detailsWishlistBtn = document.getElementById('details-wishlist-btn');
-  if (detailsWishlistBtn) {
-    const isWishlisted = wishlist.includes(product.id);
-    detailsWishlistBtn.classList.toggle('wishlisted-active', isWishlisted);
-    const icon = detailsWishlistBtn.querySelector('i');
-    if (icon) {
-      icon.className = isWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-    }
-    const labelText = document.getElementById('details-wishlist-btn-label');
-    if (labelText) {
-      labelText.textContent = isWishlisted ? 'Wishlisted' : 'Add to Wishlist';
-    }
+  if (!isVariant) {
+    if (detailsCategoryBadge) detailsCategoryBadge.textContent = product.category + (product.series ? ` — Series ${product.series}` : '');
+    const sizeOptions = buildSizeOptions(product);
+    renderProductVariants(product, sizeOptions);
+    renderProductInfoCards(product, !!(sizeOptions && sizeOptions.length));
     
-    detailsWishlistBtn.onclick = (event) => {
-      event.stopPropagation();
-      toggleWishlist(product.id);
-      
-      const nowWishlisted = wishlist.includes(product.id);
-      detailsWishlistBtn.classList.toggle('wishlisted-active', nowWishlisted);
+    // Render related products recommendation (variants)
+    renderRelatedProducts(product);
+
+    // Hook up CTA buttons
+    const whatsappCta = document.getElementById('details-whatsapp-cta');
+    if (whatsappCta) {
+      whatsappCta.onclick = () => {
+        const text = encodeURIComponent(`Hi Durga Furniture, I am interested in learning more about "${product.title}" (${product.category}).`);
+        window.open(`https://wa.me/916369088233?text=${text}`, '_blank');
+      };
+    }
+
+    const callCta = document.getElementById('details-call-cta');
+    if (callCta) {
+      callCta.onclick = () => {
+        window.location.href = 'tel:+916369088233';
+      };
+    }
+
+    // Hook up Details page Wishlist button
+    const detailsWishlistBtn = document.getElementById('details-wishlist-btn');
+    if (detailsWishlistBtn) {
+      const isWishlisted = wishlist.includes(product.id);
+      detailsWishlistBtn.classList.toggle('wishlisted-active', isWishlisted);
+      const icon = detailsWishlistBtn.querySelector('i');
       if (icon) {
-        icon.className = nowWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+        icon.className = isWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
       }
+      const labelText = document.getElementById('details-wishlist-btn-label');
       if (labelText) {
-        labelText.textContent = nowWishlisted ? 'Wishlisted' : 'Add to Wishlist';
+        labelText.textContent = isWishlisted ? 'Wishlisted' : 'Add to Wishlist';
       }
-    };
+      
+      detailsWishlistBtn.onclick = (event) => {
+        event.stopPropagation();
+        toggleWishlist(product.id);
+        
+        const nowWishlisted = wishlist.includes(product.id);
+        detailsWishlistBtn.classList.toggle('wishlisted-active', nowWishlisted);
+        if (icon) {
+          icon.className = nowWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+        }
+        if (labelText) {
+          labelText.textContent = nowWishlisted ? 'Wishlisted' : 'Add to Wishlist';
+        }
+      };
+    }
   }
 }
 
@@ -796,12 +872,17 @@ document.querySelectorAll('.category-banner-card').forEach((card) => {
   });
 });
 
-const API_URL = "http://127.0.0.1:8000/api";
+const currentHost = window.location.hostname;
+const API_URL = currentHost === 'localhost' || currentHost === '127.0.0.1' 
+  ? "http://localhost:8000/api" 
+  : `http://${currentHost}:8000/api`;
 
 // FETCH PRODUCTS FROM DJANGO REST API AND POPULATE GLOBALLY
 async function fetchDjangoProducts() {
   try {
-    const res = await fetch(`${API_URL}/products/`);
+    const res = await fetch(`${API_URL}/products/`, {
+      cache: 'no-store'
+    });
     if (res.ok) {
       const data = await res.json();
       const djangoProds = data.map(p => {
@@ -820,17 +901,16 @@ async function fetchDjangoProducts() {
           warranty: p.warranty || '5 Years Structural Warranty',
           availability: 'In Stock',
           price: p.price || 0,
-          isFromDjango: true
+          isFromDjango: true,
+          database_id: p.database_id,
+          variants: p.variants || [],
+          type: p.type || 'series'
         };
       });
       
-      // Filter out existing Django products in-place
-      for (let i = productData.length - 1; i >= 0; i--) {
-        if (productData[i].isFromDjango) {
-          productData.splice(i, 1);
-        }
-      }
-      productData.unshift(...djangoProds);
+      // Make Django REST API database the sole source of truth for catalogue
+      productData.length = 0;
+      productData.push(...djangoProds);
       
       // Update admin stat catalog size
       const adminCatalogSize = document.getElementById('admin-stat-catalog-size');
@@ -842,6 +922,7 @@ async function fetchDjangoProducts() {
     console.warn("Could not load products from local Django database. Running catalog with mock file data.", err);
   } finally {
     filterCatalog();
+    renderFeaturedProducts();
     renderAdminProductsTable();
   }
 }
@@ -877,6 +958,7 @@ function getStaticProductSeries(product) {
   if (product.category === 'Other Furniture') {
     if (id.includes('stool')) return '1';
     if (id.includes('locker') || id.includes('almirah')) return '2';
+    if (id.includes('table') || id.includes('office') || id.includes('series3')) return '3';
     return '1';
   }
   
@@ -935,7 +1017,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fetch Cloudinary credentials from django REST API
   async function fetchCloudinaryConfig() {
     try {
-      const res = await fetch(`${API_URL}/cloudinary-config/`);
+      const res = await fetch(`${API_URL}/cloudinary-config/`, {
+        cache: 'no-store'
+      });
       if (res.ok) {
         cloudinaryConfig = await res.json();
       }
@@ -1014,7 +1098,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let maxSeries = 5;
     if (categoryVal === 'Wooden Furniture') maxSeries = 8;
-    else if (categoryVal === 'Other Furniture') maxSeries = 2;
+    else if (categoryVal === 'Other Furniture') maxSeries = 3;
     
     for (let i = 1; i <= maxSeries; i++) {
       const opt = document.createElement('option');
@@ -1060,7 +1144,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const editId = document.getElementById('admin-product-edit-id').value;
       const title = document.getElementById('admin-prod-title').value.trim();
       const category = adminCategorySelect.value;
-      const series = category === 'Other Furniture' ? '' : adminSeriesSelect.value;
+      const series = adminSeriesSelect.value;
       const price = parseFloat(document.getElementById('admin-prod-price').value);
       const desc = document.getElementById('admin-prod-desc').value.trim();
       const dims = document.getElementById('admin-prod-dimensions').value.trim();
@@ -1084,7 +1168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let res;
         if (editId) {
           res = await fetch(`${API_URL}/products/${editId}/`, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
@@ -1139,7 +1223,7 @@ function renderAdminProductsTable() {
 
     tr.innerHTML = `
       <td>
-        <img src="${p.image}" alt="${p.title}" style="width: 44px; height: 44px; object-fit: cover; border-radius: 4px;">
+        <img src="${p.image}" alt="${p.title}" style="width: 44px; height: 44px; object-fit: contain; background-color: var(--color-bg-cream); border-radius: 4px;">
       </td>
       <td>
         <div style="font-weight:600; color:var(--color-text-espresso);">${p.title}</div>
@@ -1152,8 +1236,8 @@ function renderAdminProductsTable() {
       <td>${p.dimensions || 'N/A'}</td>
       <td>
         <div style="display:flex; gap: 8px;">
-          <button class="btn-outline" onclick="editProduct('${p.id}')" style="padding: 4px 8px; font-size:10px; height:auto; width:auto;"><i class="fa-solid fa-pen"></i></button>
-          <button class="btn-outline" onclick="deleteProduct('${p.id}')" style="padding: 4px 8px; font-size:10px; height:auto; width:auto; border-color:#E24C4C; color:#E24C4C;"><i class="fa-solid fa-trash"></i></button>
+          <button class="btn-outline" onclick="editProduct('${p.database_id}')" style="padding: 4px 8px; font-size:10px; height:auto; width:auto;"><i class="fa-solid fa-pen"></i></button>
+          <button class="btn-outline" onclick="deleteProduct('${p.database_id}')" style="padding: 4px 8px; font-size:10px; height:auto; width:auto; border-color:#E24C4C; color:#E24C4C;"><i class="fa-solid fa-trash"></i></button>
         </div>
       </td>
     `;
@@ -1163,13 +1247,13 @@ function renderAdminProductsTable() {
 
 // global action functions for edit and delete clicks
 window.editProduct = function(productId) {
-  const product = productData.find(p => p.id === String(productId));
+  const product = productData.find(p => String(p.database_id) === String(productId));
   if (!product) return;
 
   const adminBackdrop = document.getElementById('modal-admin-backdrop');
   const adminCategorySelect = document.getElementById('admin-prod-category');
   
-  document.getElementById('admin-product-edit-id').value = product.id;
+  document.getElementById('admin-product-edit-id').value = product.database_id;
   document.getElementById('admin-prod-title').value = product.title;
   document.getElementById('admin-prod-price').value = product.price || '';
   document.getElementById('admin-prod-desc').value = product.description;
@@ -1190,7 +1274,7 @@ window.editProduct = function(productId) {
     adminSeriesSelect.innerHTML = '';
     let maxSeries = 5;
     if (product.category === 'Wooden Furniture') maxSeries = 8;
-    else if (product.category === 'Other Furniture') maxSeries = 2;
+    else if (product.category === 'Other Furniture') maxSeries = 3;
     for (let i = 1; i <= maxSeries; i++) {
       const opt = document.createElement('option');
       opt.value = String(i);
@@ -1236,3 +1320,149 @@ function showToast(message) {
   }
 }
 window.showToast = showToast;
+
+// Hook into routeTo to manage history on mobile
+const originalRouteTo = window.routeTo;
+let isPoppingState = false;
+let activeProductSlug = null;
+let currentOverlay = null;
+
+window.routeTo = function(route, category, product) {
+  if (originalRouteTo) originalRouteTo(route, category, product);
+  
+  // Mobile-only History Management
+  if (window.innerWidth < 768 && !isPoppingState) {
+    if (route === 'details') {
+      history.pushState({ route: 'details', slug: activeProductSlug }, '', '#details');
+    } else {
+      history.pushState({ route: route, category: category, product: product }, '', '#' + route);
+    }
+  }
+};
+
+// Android System Back Button & Routing History Manager (Mobile-only IIFE)
+(function() {
+  if (window.innerWidth >= 768) return; // STRICT RULE: Fix ONLY the mobile behavior.
+
+  // Initialize baseline state on window load
+  window.addEventListener('load', () => {
+    if (!history.state) {
+      history.replaceState({ route: 'home' }, '', '#home');
+    }
+  });
+
+  // Hook into showProductDetailsBySlug to capture the active product details slug
+  let originalShowProductDetailsBySlug = window.showProductDetailsBySlug;
+  if (!originalShowProductDetailsBySlug && typeof showProductDetailsBySlug !== 'undefined') {
+    originalShowProductDetailsBySlug = showProductDetailsBySlug;
+  }
+  
+  if (originalShowProductDetailsBySlug) {
+    window.showProductDetailsBySlug = function(slug) {
+      activeProductSlug = slug;
+      if (window.innerWidth < 768 && !isPoppingState) {
+        history.pushState({ route: 'details', slug: slug }, '', '#details');
+      }
+      return originalShowProductDetailsBySlug(slug);
+    };
+  }
+
+  // Handle popstate (Android back button / back gesture)
+  window.addEventListener('popstate', (event) => {
+    isPoppingState = true;
+    
+    try {
+      // 1. Close mobile menu if open
+      const menuPanel = document.querySelector('.mobile-nav-panel.open');
+      if (menuPanel) {
+        if (window.closeMobileNav) window.closeMobileNav();
+        currentOverlay = null;
+        return;
+      }
+
+      // 2. Close modals if open
+      const openModal = document.querySelector('.modal-backdrop.open');
+      if (openModal) {
+        openModal.classList.remove('open');
+        currentOverlay = null;
+        return;
+      }
+
+      // 3. Close lightbox if open
+      const lightbox = document.getElementById('image-lightbox');
+      if (lightbox && lightbox.style.display === 'flex') {
+        if (window.closeLightbox) window.closeLightbox();
+        currentOverlay = null;
+        return;
+      }
+
+      // 4. Handle route transition
+      if (event.state && event.state.route) {
+        const state = event.state;
+        if (state.route === 'details' && state.slug) {
+          if (originalShowProductDetailsBySlug) {
+            originalShowProductDetailsBySlug(state.slug);
+          }
+        } else {
+          if (originalRouteTo) {
+            originalRouteTo(state.route, state.category, state.product);
+          }
+        }
+      } else {
+        // Fallback to home if no state
+        if (originalRouteTo) {
+          originalRouteTo('home');
+        }
+      }
+    } finally {
+      // Reset popping flag after a tiny timeout
+      setTimeout(() => {
+        isPoppingState = false;
+      }, 50);
+    }
+  });
+
+  // Watch for UI overlay openings and push history states automatically
+  const overlayObserver = new MutationObserver((mutations) => {
+    if (window.innerWidth >= 768) return;
+    
+    mutations.forEach((mutation) => {
+      const target = mutation.target;
+      let isOpen = false;
+
+      if (mutation.attributeName === 'class') {
+        isOpen = target.classList.contains('open');
+      } else if (mutation.attributeName === 'style') {
+        isOpen = target.style.display === 'flex';
+      }
+
+      if (isOpen) {
+        if (!isPoppingState && currentOverlay !== target) {
+          currentOverlay = target;
+          history.pushState({ overlay: true }, '', window.location.hash);
+        }
+      } else {
+        if (!isPoppingState && currentOverlay === target) {
+          currentOverlay = null;
+          history.back();
+        }
+      }
+    });
+  });
+
+  const startObserving = () => {
+    const elMenu = document.querySelector('.mobile-nav-panel');
+    const elAdmin = document.querySelector('#modal-admin-backdrop');
+    const elLightbox = document.querySelector('#image-lightbox');
+
+    if (elMenu) overlayObserver.observe(elMenu, { attributes: true, attributeFilter: ['class'] });
+    if (elAdmin) overlayObserver.observe(elAdmin, { attributes: true, attributeFilter: ['class'] });
+    if (elLightbox) overlayObserver.observe(elLightbox, { attributes: true, attributeFilter: ['style'] });
+  };
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', startObserving);
+  } else {
+    startObserving();
+  }
+})();

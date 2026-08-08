@@ -8,5 +8,5 @@ class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
 if __name__ == '__main__':
-    print("Starting server on port 8000 with caching disabled...")
-    http.server.test(HandlerClass=NoCacheHandler, port=8000)
+    print("Starting server on 0.0.0.0:8080 with caching disabled...")
+    http.server.test(HandlerClass=NoCacheHandler, port=8080, bind="0.0.0.0")

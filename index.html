@@ -9,7 +9,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Custom Stylesheets -->
-  <link rel="stylesheet" href="style.css?v=2.5">
+  <link rel="stylesheet" href="style.css?v=2.9">
   <style>
     .emulator-container {
       -webkit-overflow-scrolling: touch;
@@ -38,7 +38,7 @@
                     <span><i class="fa-solid fa-location-dot"></i> Coimbatore, Tamil Nadu</span>
                   </div>
                   <div>
-                    <span style="cursor: pointer;" onclick="routeTo('admin')"><i class="fa-solid fa-lock"></i> Staff Portal</span>
+                    <span style="cursor: pointer;" onclick="window.location.href='http://127.0.0.1:8000/admin-portal/'"><i class="fa-solid fa-lock"></i> Staff Portal</span>
                   </div>
                 </div>
               </div>
@@ -60,7 +60,7 @@
                         <button class="utility-icon-btn" onclick="routeTo('listing')" title="Search products">
                           <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
-                        <button class="utility-icon-btn" onclick="routeTo('wishlist')" title="View Wishlist">
+                        <button class="utility-icon-btn" onclick="routeTo('wishlist')" title="View Wishlist" style="display: none !important;">
                           <i class="fa-solid fa-heart"></i>
                           <span class="utility-badge wishlist-counter-badge">0</span>
                         </button>
@@ -118,7 +118,7 @@
                   <div class="category-banners-row">
                     <!-- Banner 1: Steel -->
                     <div class="category-banner-card">
-                      <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80" alt="Steel Furniture" class="category-banner-bg" onerror="this.src='https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1200&q=80'">
+                      <img src="steel_furniture_banner.jpg" alt="Steel Furniture" class="category-banner-bg">
                       <div class="category-banner-overlay">
                         <h3 class="category-banner-title">Steel Furniture</h3>
                         <span class="category-banner-link" data-route="listing" data-category="Steel Furniture">Shop Collection <i class="fa-solid fa-arrow-right"></i></span>
@@ -142,6 +142,21 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- 2. Featured Products Grid -->
+                <section class="container" style="padding-top: 60px; padding-bottom: 60px;">
+                  <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+                    <span class="section-tagline">Curated Best Sellers</span>
+                    <h2 class="section-title">Featured Pieces</h2>
+                  </div>
+                  <div class="products-grid" id="featured-products-grid">
+                    <!-- Loaded dynamically from Django backend -->
+                  </div>
+                  <div style="text-align: center; margin-top: 40px;">
+                    <button class="btn-outline" onclick="routeTo('listing')">View All Products</button>
+                  </div>
+                </section>
+
                 <!-- 6. Why Choose Us Section -->
                 <section class="why-choose-us-section">
                   <div class="container">
@@ -199,28 +214,6 @@
                             <div class="stat-box-desc">Unique Designs</div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-                <!-- 8. Customer Testimonials -->
-                <section class="testimonials-section">
-                  <div class="container">
-                    <div class="section-header" style="margin-top: 0; margin-bottom: 30px;">
-                      <span class="section-tagline">Client Voices</span>
-                      <h2 class="section-title">Trusted By Thousands</h2>
-                    </div>
-                    <div class="testimonials-wrapper">
-                      <div class="testimonial-slide">
-                        <div class="testimonial-quote-icon"><i class="fa-solid fa-quote-left"></i></div>
-                        <p class="testimonial-text">"Purchased a custom teak wood dining table and steel cupboard. The build quality is unmatched. Direct manufacturing price saved us nearly 30% compared to local retail showrooms."</p>
-                        <h5 class="testimonial-author">Sundararajan K.</h5>
-                        <span class="testimonial-role">Homeowner, Coimbatore</span>
-                      </div>
-                      <div class="carousel-nav-dots">
-                        <div class="dot active"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
                       </div>
                     </div>
                   </div>
@@ -332,7 +325,7 @@
                             <div class="contact-detail-icon"><i class="fa-solid fa-location-dot"></i></div>
                             <div class="contact-detail-text">
                               <strong>Headquarters & Factory</strong>
-                              <span>Durga Furniture Buildings, Avinashi Road, Coimbatore - 641018, Tamil Nadu</span>
+                              <span>BUS STOP, 3/15, Villankurichi Rd, opposite to MURUGAN NAGAR, Saravanampatti Post, Vinayagapuram, Coimbatore, Tamil Nadu - 641035</span>
                             </div>
                           </div>
                           <div class="contact-detail-item">
@@ -390,7 +383,7 @@
                       <h2>Our Location</h2>
                     </div>
                     <div class="map-card">
-                      <iframe src="https://www.google.com/maps?q=No.17/1%2C%2017/1%2C%20Srinivasa%20Ragavan%20St%2C%20near%20Gandhi%20Park%2C%20RS%20Puram%2C%20Coimbatore%2C%20Tamil%20Nadu%20641001&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                      <iframe src="https://www.google.com/maps?q=BUS+STOP%2C+3%2F15%2C+Villankurichi+Rd%2C+opposite+to+MURUGAN+NAGAR%2C+Saravanampatti+Post%2C+Coimbatore%2C+Tamil+Nadu+641035&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                   </div>
                 </section>
@@ -510,38 +503,7 @@
                           <i class="fa-solid fa-phone"></i> Call Now
                         </button>
                       </div>
-                      <div class="details-actions-bar-secondary" style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <button class="btn-request-price" id="details-request-price-btn" style="flex: 1; min-width: 120px;">
-                          Request Price
-                        </button>
-                        <button class="btn-visit-showroom" id="details-visit-showroom-btn" style="flex: 1; min-width: 140px;">
-                          <i class="fa-solid fa-location-dot"></i> Visit Showroom
-                        </button>
-                        <button class="btn-add-wishlist" id="details-wishlist-btn" style="flex: 1; min-width: 150px; justify-content: center; height: 46px; font-size: 13px !important;">
-                          <i class="fa-regular fa-heart"></i> <span id="details-wishlist-btn-label">Add to Wishlist</span>
-                        </button>
-                      </div>
-                      <!-- Material accordions -->
-                      <div class="accordion-wrapper">
-                        <div class="accordion-item active">
-                          <div class="accordion-trigger">
-                            <span>Materials & Care</span>
-                            <i class="fa-solid fa-chevron-down"></i>
-                          </div>
-                          <div class="accordion-content" style="max-height: 150px;">
-                            We source only seasoned Teak Wood and high-tensile steel alloys. Dust weekly with a soft dry cloth. Avoid exposure to direct rainfall or constant high-moisture setups.
-                          </div>
-                        </div>
-                        <div class="accordion-item">
-                          <div class="accordion-trigger">
-                            <span>Direct Shipping & Assembly</span>
-                            <i class="fa-solid fa-chevron-down"></i>
-                          </div>
-                          <div class="accordion-content">
-                            Free shipping inside Coimbatore city limits. For other districts in Tamil Nadu, transit rates apply. Our carpentry team provides free assembly upon delivery.
-                          </div>
-                        </div>
-                      </div>
+
                     </div>
                   </div>
                   <!-- Related Products Row -->
@@ -586,7 +548,7 @@
                   </div>
                   <div style="max-width: 800px; margin: 0 auto;">
                     <img src="durga_about.jpeg" alt="Durga Showroom" style="width: 100%; height: 320px; object-fit: cover; border-radius: var(--border-radius-md); margin-bottom: 24px; border: 1px solid var(--color-beige-border);">
-                    <h3 style="margin-bottom: 14px;">Avinashi Road's Premier Furniture Pioneer</h3>
+                    <h3 style="margin-bottom: 14px;">Vilankurichi Road's Premier Furniture Pioneer</h3>
                     <p style="color: var(--color-text-muted); margin-bottom: 16px;">Founded in Coimbatore in 1996, Durga Furniture has set the standard for premium residential and commercial furniture. Operating our own integrated wooden seasoning and steel tube fabrication factories, we deliver highest durability directly to home owners and commercial offices.</p>
                     
                     <h4 style="margin-top: 24px; margin-bottom: 12px; font-weight: 700;">Sustainable Teak Seasoning & Design Process</h4>
@@ -606,20 +568,20 @@
                 <button class="view-back-btn" onclick="routeTo('home')" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
                 <div class="container" style="padding: 48px 24px;">
                   <div class="section-header" style="margin-top:0; margin-bottom: 32px;">
-                    <span class="section-tagline">Avinashi Road HQ</span>
+                    <span class="section-tagline">Vilankurichi Road HQ</span>
                     <h2 class="section-title">Contact & Showroom Coordinates</h2>
                   </div>
                   <div class="contact-grid">
                     <div class="contact-info-card">
                       <h3 class="contact-title-small">Coimbatore Showroom</h3>
-                      <p class="contact-desc">Drop by our main Avinashi Road warehouse showroom to browse 50+ furniture setups, test materials, and coordinate with our custom carpenters.</p>
+                      <p class="contact-desc">Drop by our main Vilankurichi Road showroom to browse 50+ furniture setups, test materials, and coordinate with our custom carpenters.</p>
                       
                       <div class="contact-details-list">
                         <div class="contact-detail-item">
                           <div class="contact-detail-icon"><i class="fa-solid fa-map-location-dot"></i></div>
                           <div class="contact-detail-text">
-                            <strong>Avinashi Road Showroom</strong>
-                            <span>Durga Furniture Buildings, 148 Avinashi Road, Opposite KMCH, Coimbatore - 641018</span>
+                            <strong>Vilankurichi Road Showroom</strong>
+                            <span>BUS STOP, 3/15, Villankurichi Rd, opposite to MURUGAN NAGAR, Saravanampatti Post, Murugan Nagar, Vinayagapuram, Coimbatore, Tamil Nadu 641035</span>
                           </div>
                         </div>
                         <div class="contact-detail-item">
@@ -663,7 +625,7 @@
                       <h2>Our Location</h2>
                     </div>
                     <div class="map-card">
-                      <iframe src="https://www.google.com/maps?q=No.17/1%2C%2017/1%2C%20Srinivasa%20Ragavan%20St%2C%20near%20Gandhi%20Park%2C%20RS%20Puram%2C%20Coimbatore%2C%20Tamil%20Nadu%20641001&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                      <iframe src="https://www.google.com/maps?q=BUS+STOP%2C+3%2F15%2C+Villankurichi+Rd%2C+opposite+to+MURUGAN+NAGAR%2C+Saravanampatti+Post%2C+Coimbatore%2C+Tamil+Nadu+641035&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                   </div>
                 </div>
@@ -794,7 +756,7 @@
                       <ul class="footer-links-list">
                         <li class="footer-link-item"><a onclick="routeTo('home')">Home Page</a></li>
                         <li class="footer-link-item"><a onclick="routeTo('listing')">Product Catalog</a></li>
-                        <li class="footer-link-item"><a onclick="routeTo('wishlist')">Your Wishlist</a></li>
+                        <li class="footer-link-item" style="display: none !important;"><a onclick="routeTo('wishlist')">Your Wishlist</a></li>
                         <li class="footer-link-item"><a onclick="routeTo('about')">About Us</a></li>
                         <li class="footer-link-item"><a onclick="routeTo('contact')">Showroom Location</a></li>
                       </ul>
@@ -837,7 +799,7 @@
                     </a>
                   </div>
                   <div class="footer-bottom">
-                    <span>© 2026 Durga Furniture. Avinashi Road, Coimbatore. All Rights Reserved.</span>
+                    <span>© 2026 Durga Furniture. Vilankurichi Road, Coimbatore. All Rights Reserved.</span>
                     <span>Designed as Premium Figma Responsive System Concept</span>
                   </div>
                 </div>
@@ -967,7 +929,7 @@
 
   <!-- Logic scripts -->
   <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
-  <script src="products-data.js?v=2.4"></script>
-  <script src="app.js?v=2.4"></script>
+  <script src="products-data.js?v=3.0"></script>
+  <script src="app.js?v=3.0"></script>
 </body>
 </html>
