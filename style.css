@@ -3887,6 +3887,9 @@ textarea.form-control {
    MOBILE-ONLY RESPONSIVE OPTIMIZATIONS (screens <= 767px)
    ========================================================================== */
 @media (max-width: 767px) {
+  .catalog-toolbar {
+    display: none !important;
+  }
   /* Prevent any horizontal overflow */
   html, body, .durga-website-app, .view-panel, .container {
     max-width: 100% !important;
