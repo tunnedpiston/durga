@@ -1331,6 +1331,9 @@ let activeProductSlug = null;
 let currentOverlay = null;
 
 window.routeTo = function(route, category, product) {
+  // Clear active overlay tracking to prevent logical back-navigation loops during direct routing
+  currentOverlay = null;
+
   if (originalRouteTo) originalRouteTo(route, category, product);
   
   // Mobile-only History Management
