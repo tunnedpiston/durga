@@ -831,6 +831,9 @@ function routeTo(route, category, product) {
       showView('contact-view');
       break;
     case 'admin':
+      // Replace the current state with storefront (home) to ensure back button lands on home
+      history.replaceState({ route: 'home' }, '', '#home');
+      history.pushState({ route: 'admin' }, '', '#admin');
       showView('admin-view');
       break;
     default:
@@ -875,10 +878,8 @@ document.querySelectorAll('.category-banner-card').forEach((card) => {
   });
 });
 
-const currentHost = window.location.hostname;
-const API_URL = currentHost === 'localhost' || currentHost === '127.0.0.1' 
-  ? "http://localhost:8000/api" 
-  : `http://${currentHost}:8000/api`;
+const BASE_URL = "https://aizen222.pythonanywhere.com";
+const API_URL = `${BASE_URL}/api`;
 
 // FETCH PRODUCTS FROM DJANGO REST API AND POPULATE GLOBALLY
 async function fetchDjangoProducts() {
@@ -1340,7 +1341,7 @@ window.routeTo = function(route, category, product) {
   if (window.innerWidth < 768 && !isPoppingState) {
     if (route === 'details') {
       history.pushState({ route: 'details', slug: activeProductSlug }, '', '#details');
-    } else {
+    } else if (route !== 'admin') {
       history.pushState({ route: route, category: category, product: product }, '', '#' + route);
     }
   }
