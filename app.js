@@ -501,6 +501,13 @@ function renderProductInfoCards(product, hasSizeOptions) {
   if (product.dimensions) {
     cards.push(['Dimensions', product.dimensions]);
   }
+  const mat = product.material || product.materials;
+  if (mat) {
+    cards.push(['Material', mat]);
+  }
+  if (product.warranty) {
+    cards.push(['Warranty', product.warranty]);
+  }
 
   cards.forEach(([label, value]) => {
     const card = document.createElement('div');
@@ -577,54 +584,45 @@ async function showProductDetailsBySlug(slug) {
   }
 }
 
-async function renderRelatedProducts(currentProduct) {
+function renderVariantsGallery(variants, currentVariantId) {
   const container = document.getElementById('related-products-carousel');
   if (!container) return;
-  
-  const relatedTitle = document.querySelector('#details-view h3.details-specs-title');
-  const seriesNum = getProductSeriesNumber(currentProduct);
-  const category = currentProduct.category_name || currentProduct.category;
 
+  const relatedTitle = document.querySelector('#details-view h3.details-specs-title');
   if (relatedTitle) {
     relatedTitle.textContent = "Color / Finish Gallery";
+    relatedTitle.style.display = 'block';
   }
 
-  container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Loading gallery...</p>';
+  container.innerHTML = '';
+  if (!variants || variants.length === 0) {
+    container.innerHTML = '<p class="no-related" style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">No variants found.</p>';
+    return;
+  }
 
-  try {
-    // Fetch variants from the API
-    let url = `${API_URL}/products/?category=${encodeURIComponent(category)}&series=${seriesNum}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    if (res.ok) {
-      const data = await res.json();
-      
-      container.innerHTML = '';
-      if (data.length === 0) {
-        container.innerHTML = '<p class="no-related" style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">No variants found.</p>';
-      } else {
-        // Render each variant as a plain image card
-        data.forEach((variant) => {
-          const card = document.createElement('div');
-          card.className = 'variant-gallery-card';
-          card.style.cssText = 'cursor: pointer; border: 2px solid var(--color-border); border-radius: 8px; overflow: hidden; background: var(--color-bg-cream); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;';
-          card.innerHTML = `<img src="${variant.image_url}" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.src='logo.png';">`;
-          
-          card.onmouseenter = () => card.style.borderColor = 'var(--color-gold)';
-          card.onmouseleave = () => card.style.borderColor = 'var(--color-border)';
+  // Render each variant as a plain image card
+  variants.forEach((variant) => {
+    const card = document.createElement('div');
+    card.className = 'variant-gallery-card';
+    
+    // Highlight if it's the current active variant
+    const isActive = (variant.id === currentVariantId || variant.database_id === currentVariantId);
+    const borderColor = isActive ? 'var(--color-primary-gold)' : 'var(--color-beige-border)';
+    const borderWidth = isActive ? '3px' : '2px';
 
-          card.onclick = () => {
-            showProductDetailsBySlug(variant.slug || variant.id);
-          };
-          container.appendChild(card);
-        });
-      }
-    } else {
-      throw new Error("Failed to fetch variants");
+    card.style.cssText = `cursor: pointer; border: ${borderWidth} solid ${borderColor}; border-radius: 8px; overflow: hidden; background: var(--color-bg-cream); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;`;
+    card.innerHTML = `<img src="${variant.image_url}" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.src='logo.png';" title="${variant.color_label || ''}">`;
+    
+    if (!isActive) {
+      card.onmouseenter = () => card.style.borderColor = 'var(--color-primary-gold)';
+      card.onmouseleave = () => card.style.borderColor = 'var(--color-beige-border)';
     }
-  } catch (err) {
-    console.error("Error fetching variants from API:", err);
-    container.innerHTML = '<p class="no-related" style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Could not load gallery.</p>';
-  }
+
+    card.onclick = () => {
+      showProductDetailsBySlug(variant.slug || variant.id);
+    };
+    container.appendChild(card);
+  });
 }
 
 function showProductDetails(product) {
@@ -646,41 +644,86 @@ function showProductDetails(product) {
 
   const isVariant = (product.type === 'variant');
 
+  // Specs Elements
+  const specDescEl = document.getElementById('details-description-text');
+  const specCardsEl = document.getElementById('details-info-cards');
+  const specVariantsEl = document.getElementById('details-variants-container');
+
+  // Resolve specs from either Series or Variant (parent_series_details)
+  const parentDetails = product.parent_series_details;
+  const specDescription = isVariant ? (parentDetails?.description || '') : (product.description || '');
+  const specDimensions = isVariant ? (parentDetails?.dimensions || '') : (product.dimensions || '');
+  const specMaterial = isVariant ? (parentDetails?.material || '') : (product.materials || product.material || '');
+  const specWarranty = isVariant ? (parentDetails?.warranty || '') : (product.warranty || '');
+
+  let variantsList = [];
+
   if (isVariant) {
-    // Hide details specifications panel
-    if (detailsInfo) detailsInfo.style.display = 'none';
+    // Hide details specifications panel sub-components
+    if (specDescEl) specDescEl.style.display = 'none';
+    if (specCardsEl) specCardsEl.style.display = 'none';
+    if (specVariantsEl) specVariantsEl.style.display = 'none';
+
+    if (detailsInfo) {
+      detailsInfo.style.display = 'block';
+      detailsInfo.style.textAlign = 'center';
+    }
     if (mainRow) mainRow.classList.add('variant-only-view');
     
-    // Hide recommendations/variant strip
-    if (recommendationsTitle) recommendationsTitle.style.display = 'none';
-    if (recommendationsContainer) recommendationsContainer.style.display = 'none';
-    
     // Breadcrumbs
+    const parentCat = product.category_name || (parentDetails && parentDetails.category);
+    const parentName = product.series_name || (parentDetails && parentDetails.name);
+    const parentId = product.series_slug || (parentDetails && parentDetails.id);
+
     if (detailsCrumbCategory) {
-      detailsCrumbCategory.innerHTML = `<span style="cursor: pointer;" onclick="routeTo('listing', '${product.category_name}')">${product.category_name}</span> / <span style="cursor: pointer; text-decoration: underline; color: var(--color-maroon);" onclick="showProductDetailsBySlug('${product.series_slug}')">${product.series_name}</span>`;
+      detailsCrumbCategory.innerHTML = `<span style="cursor: pointer;" onclick="routeTo('listing', '${parentCat}')">${parentCat}</span>`;
     }
-    if (detailsCrumbTitle) detailsCrumbTitle.textContent = product.color_label || 'Variant';
+    if (detailsCrumbTitle) {
+      detailsCrumbTitle.innerHTML = `<span style="cursor: pointer; color: var(--color-maroon); font-weight: 600;" onclick="showProductDetailsBySlug('${parentId}')">← Back to ${parentName} Specifications</span>`;
+    }
+
+    if (parentDetails && parentDetails.variants) {
+      variantsList = parentDetails.variants;
+    }
   } else {
     // Show details specifications panel
-    if (detailsInfo) detailsInfo.style.display = 'block';
+    if (specDescEl) specDescEl.style.display = 'block';
+    if (specCardsEl) specCardsEl.style.display = 'grid';
+    if (specVariantsEl) specVariantsEl.style.display = 'block';
+
+    if (detailsInfo) {
+      detailsInfo.style.display = 'block';
+      detailsInfo.style.textAlign = '';
+    }
     if (mainRow) mainRow.classList.remove('variant-only-view');
     
-    // Show recommendations/variant strip
-    if (recommendationsTitle) recommendationsTitle.style.display = 'block';
-    if (recommendationsContainer) recommendationsContainer.style.display = 'grid';
-    
     // Breadcrumbs
-    const seriesNum = getProductSeriesNumber(product);
-    const seriesSuffix = seriesNum ? ` — Series ${seriesNum}` : '';
     if (detailsCrumbCategory) {
-      detailsCrumbCategory.innerHTML = `<span style="cursor: pointer;" onclick="routeTo('listing', '${product.category}')">${product.category}</span> / <span>Series ${product.series}</span>`;
+      detailsCrumbCategory.innerHTML = `<span style="cursor: pointer;" onclick="routeTo('listing', '${product.category}')">${product.category}</span>`;
     }
-    if (detailsCrumbTitle) detailsCrumbTitle.textContent = product.title;
+    if (detailsCrumbTitle) {
+      detailsCrumbTitle.textContent = product.title;
+    }
+
+    variantsList = product.variants || [];
   }
 
+  // Populate basic text info
   if (detailsTitleText) detailsTitleText.textContent = product.title || product.name;
-  if (detailsDescriptionText) detailsDescriptionText.textContent = product.description;
+  if (detailsDescriptionText) detailsDescriptionText.textContent = specDescription;
   
+  // Set Category badge
+  if (detailsCategoryBadge) {
+    if (isVariant) {
+      const parentCat = product.category_name || (parentDetails && parentDetails.category);
+      const parentName = product.series_name || (parentDetails && parentDetails.name);
+      detailsCategoryBadge.textContent = parentCat + (parentName ? ` — ${parentName}` : '');
+    } else {
+      detailsCategoryBadge.textContent = product.category + (product.series ? ` — Series ${product.series}` : '');
+    }
+  }
+
+  // Set main variant image
   const imgUrl = product.image_url || product.image || 'logo.png';
   if (detailsMainViewImage) {
     detailsMainViewImage.src = imgUrl;
@@ -715,59 +758,65 @@ function showProductDetails(product) {
     }
   }
 
+  // Render variant options and info cards for Series
   if (!isVariant) {
-    if (detailsCategoryBadge) detailsCategoryBadge.textContent = product.category + (product.series ? ` — Series ${product.series}` : '');
     const sizeOptions = buildSizeOptions(product);
     renderProductVariants(product, sizeOptions);
-    renderProductInfoCards(product, !!(sizeOptions && sizeOptions.length));
+    renderProductInfoCards({
+      dimensions: specDimensions,
+      material: specMaterial,
+      warranty: specWarranty
+    }, !!(sizeOptions && sizeOptions.length));
+  }
+
+  // Render related products/variants gallery below
+  renderVariantsGallery(variantsList, product.id);
+
+  // Hook up CTA buttons (WhatsApp & Call)
+  const whatsappCta = document.getElementById('details-whatsapp-cta');
+  if (whatsappCta) {
+    whatsappCta.onclick = () => {
+      const prodTitle = product.title || product.name;
+      const prodCategory = isVariant ? product.category_name : product.category;
+      const text = encodeURIComponent(`Hi Durga Furniture, I am interested in learning more about "${prodTitle}" (${prodCategory}).`);
+      window.open(`https://wa.me/916369088233?text=${text}`, '_blank');
+    };
+  }
+
+  const callCta = document.getElementById('details-call-cta');
+  if (callCta) {
+    callCta.onclick = () => {
+      window.location.href = 'tel:+916369088233';
+    };
+  }
+
+  // Hook up Details page Wishlist button
+  const detailsWishlistBtn = document.getElementById('details-wishlist-btn');
+  if (detailsWishlistBtn) {
+    const isWishlisted = wishlist.includes(product.id);
+    detailsWishlistBtn.classList.toggle('wishlisted-active', isWishlisted);
+    const icon = detailsWishlistBtn.querySelector('i');
+    if (icon) {
+      icon.className = isWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+    }
+    const labelText = document.getElementById('details-wishlist-btn-label');
+    if (labelText) {
+      labelText.textContent = isWishlisted ? 'Wishlisted' : 'Add to Wishlist';
+    }
     
-    // Render related products recommendation (variants)
-    renderRelatedProducts(product);
-
-    // Hook up CTA buttons
-    const whatsappCta = document.getElementById('details-whatsapp-cta');
-    if (whatsappCta) {
-      whatsappCta.onclick = () => {
-        const text = encodeURIComponent(`Hi Durga Furniture, I am interested in learning more about "${product.title}" (${product.category}).`);
-        window.open(`https://wa.me/916369088233?text=${text}`, '_blank');
-      };
-    }
-
-    const callCta = document.getElementById('details-call-cta');
-    if (callCta) {
-      callCta.onclick = () => {
-        window.location.href = 'tel:+916369088233';
-      };
-    }
-
-    // Hook up Details page Wishlist button
-    const detailsWishlistBtn = document.getElementById('details-wishlist-btn');
-    if (detailsWishlistBtn) {
-      const isWishlisted = wishlist.includes(product.id);
-      detailsWishlistBtn.classList.toggle('wishlisted-active', isWishlisted);
-      const icon = detailsWishlistBtn.querySelector('i');
-      if (icon) {
-        icon.className = isWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-      }
-      const labelText = document.getElementById('details-wishlist-btn-label');
-      if (labelText) {
-        labelText.textContent = isWishlisted ? 'Wishlisted' : 'Add to Wishlist';
-      }
+    detailsWishlistBtn.onclick = (event) => {
+      event.stopPropagation();
+      toggleWishlist(product.id);
       
-      detailsWishlistBtn.onclick = (event) => {
-        event.stopPropagation();
-        toggleWishlist(product.id);
-        
-        const nowWishlisted = wishlist.includes(product.id);
-        detailsWishlistBtn.classList.toggle('wishlisted-active', nowWishlisted);
-        if (icon) {
-          icon.className = nowWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-        }
-        if (labelText) {
-          labelText.textContent = nowWishlisted ? 'Wishlisted' : 'Add to Wishlist';
-        }
-      };
-    }
+      const nowWishlisted = wishlist.includes(product.id);
+      detailsWishlistBtn.classList.toggle('wishlisted-active', nowWishlisted);
+      if (icon) {
+        icon.className = nowWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+      }
+      if (labelText) {
+        labelText.textContent = nowWishlisted ? 'Wishlisted' : 'Add to Wishlist';
+      }
+    };
   }
 }
 
@@ -831,10 +880,7 @@ function routeTo(route, category, product) {
       showView('contact-view');
       break;
     case 'admin':
-      // Replace the current state with storefront (home) to ensure back button lands on home
-      history.replaceState({ route: 'home' }, '', '#home');
-      history.pushState({ route: 'admin' }, '', '#admin');
-      showView('admin-view');
+      window.location.href = 'https://aizen222.pythonanywhere.com/admin-portal/';
       break;
     default:
       console.warn('Unknown route:', route);
@@ -893,15 +939,15 @@ async function fetchDjangoProducts() {
         const category = p.category || 'Other Furniture';
         return {
           id: String(p.id),
-          title: p.name,
+          title: p.title || p.name,
           category: category,
           series: p.series || '',
           badge: category === 'Steel Furniture' ? 'badge-steel' : 
                  category === 'Wooden Furniture' ? 'badge-wooden' : 'badge-other',
-          image: p.image_url || 'logo.png',
-          description: p.description || `${p.name} — high-quality showroom furniture item.`,
-          dimensions: p.dimensions || 'Standard Dimensions',
-          materials: p.material || 'Solid Wood / Steel',
+          image: p.image_url || p.image || 'logo.png',
+          description: p.description || '',
+          dimensions: p.dimensions || '',
+          materials: p.materials || p.material || 'Solid Wood / Steel',
           warranty: p.warranty || '5 Years Structural Warranty',
           availability: 'In Stock',
           price: p.price || 0,
