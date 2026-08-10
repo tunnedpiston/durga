@@ -840,6 +840,8 @@ function routeTo(route, category, product) {
 }
 
 window.routeTo = routeTo;
+window.openMobileNav = openMobileNav;
+window.closeMobileNav = closeMobileNav;
 
 mobileMenuToggle?.addEventListener('click', openMobileNav);
 mobileMenuClose?.addEventListener('click', closeMobileNav);
@@ -857,6 +859,7 @@ document.querySelectorAll('.mobile-nav-item').forEach((item) => {
     const route = item.dataset.route;
     const category = item.dataset.category;
     if (route) routeTo(route, category);
+    closeMobileNav();
   });
 });
 
