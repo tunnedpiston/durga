@@ -937,90 +937,98 @@ const ROUTES = {
 
 let activeRouteState = null;
 let isPoppingState = false;
+let isNavigating = false;
 let activeProductSlug = null;
 let currentOverlay = null;
 
 function navigateTo(routeKey, params, options = {}) {
-  // 1. Guard/Special case: admin route (external redirect)
-  if (routeKey === 'admin') {
-    window.location.href = 'https://aizen222.pythonanywhere.com/admin-portal/';
-    return;
-  }
+  const wasNavigating = isNavigating;
+  isNavigating = true;
 
-  const routeConfig = ROUTES[routeKey];
-  if (!routeConfig) {
-    console.warn('Unknown route:', routeKey);
-    navigateTo('home', {}, { replace: true });
-    return;
-  }
-
-  // Clear overlay tracking to prevent popup history interference
-  currentOverlay = null;
-  closeMobileNav();
-
-  // 2. Save current scroll position to active history state before leaving
-  if (activeRouteState && !isPoppingState) {
-    activeRouteState.scrollPos = window.scrollY;
-    history.replaceState(activeRouteState, '', getHashForState(activeRouteState));
-  }
-
-  // 3. Render view and update DOM / Title
-  showView(routeConfig.viewId);
-  if (routeConfig.title) {
-    document.title = routeConfig.title;
-  }
-  routeConfig.render(params);
-
-  // 4. Resolve URL hash and state properties
-  let hash = '#' + routeKey;
-  let stateSlug = null;
-  let stateParentType = null;
-  let stateParentSlug = null;
-
-  if (routeKey === 'details') {
-    stateSlug = params?.slug || (params?.product?.slug || params?.product?.id) || activeProductSlug;
-    if (stateSlug) {
-      hash = '#details-' + stateSlug;
+  try {
+    // 1. Guard/Special case: admin route (external redirect)
+    if (routeKey === 'admin') {
+      window.location.href = 'https://aizen222.pythonanywhere.com/admin-portal/';
+      return;
     }
-    stateParentType = params?.parentType || null;
-    stateParentSlug = params?.parentSlug || null;
-  }
 
-  // 5. Update history entry (unless popping state, which already moved the pointer)
-  let stateObj = { 
-    route: routeKey, 
-    slug: stateSlug,
-    parentType: stateParentType,
-    parentSlug: stateParentSlug,
-    params: params
-  };
+    const routeConfig = ROUTES[routeKey];
+    if (!routeConfig) {
+      console.warn('Unknown route:', routeKey);
+      navigateTo('home', {}, { replace: true });
+      return;
+    }
 
-  if (routeKey === 'listing') {
-    const activeCats = categoryFilterCheckboxes
-      .filter((checkbox) => checkbox.checked)
-      .map((checkbox) => checkbox.dataset.catValue);
-    const searchVal = catalogSearchInput?.value.trim().toLowerCase() || '';
-    const sortVal = catalogSortSelect?.value || 'popular';
+    // Clear overlay tracking to prevent popup history interference
+    currentOverlay = null;
+    closeMobileNav();
 
-    stateObj.activeCategories = activeCats;
-    stateObj.searchTerm = searchVal;
-    stateObj.sortKey = sortVal;
-  }
+    // 2. Save current scroll position to active history state before leaving
+    if (activeRouteState && !isPoppingState) {
+      activeRouteState.scrollPos = window.scrollY;
+      history.replaceState(activeRouteState, '', getHashForState(activeRouteState));
+    }
 
-  activeRouteState = stateObj;
+    // 3. Render view and update DOM / Title
+    showView(routeConfig.viewId);
+    if (routeConfig.title) {
+      document.title = routeConfig.title;
+    }
+    routeConfig.render(params);
 
-  if (!isPoppingState) {
-    if (options.replace) {
-      history.replaceState(stateObj, '', hash);
-    } else {
-      // Prevent pushing duplicate state to stack
-      const isDuplicate = history.state && 
-                          history.state.route === stateObj.route && 
-                          history.state.slug === stateObj.slug;
-      if (!isDuplicate) {
-        history.pushState(stateObj, '', hash);
+    // 4. Resolve URL hash and state properties
+    let hash = '#' + routeKey;
+    let stateSlug = null;
+    let stateParentType = null;
+    let stateParentSlug = null;
+
+    if (routeKey === 'details') {
+      stateSlug = params?.slug || (params?.product?.slug || params?.product?.id) || activeProductSlug;
+      if (stateSlug) {
+        hash = '#details-' + stateSlug;
+      }
+      stateParentType = params?.parentType || null;
+      stateParentSlug = params?.parentSlug || null;
+    }
+
+    // 5. Update history entry (unless popping state, which already moved the pointer)
+    let stateObj = { 
+      route: routeKey, 
+      slug: stateSlug,
+      parentType: stateParentType,
+      parentSlug: stateParentSlug,
+      params: params
+    };
+
+    if (routeKey === 'listing') {
+      const activeCats = categoryFilterCheckboxes
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => checkbox.dataset.catValue);
+      const searchVal = catalogSearchInput?.value.trim().toLowerCase() || '';
+      const sortVal = catalogSortSelect?.value || 'popular';
+
+      stateObj.activeCategories = activeCats;
+      stateObj.searchTerm = searchVal;
+      stateObj.sortKey = sortVal;
+    }
+
+    activeRouteState = stateObj;
+
+    if (!isPoppingState) {
+      if (options.replace) {
+        history.replaceState(stateObj, '', hash);
+      } else {
+        // Prevent pushing duplicate state to stack
+        const isDuplicate = history.state && 
+                            history.state.route === stateObj.route && 
+                            history.state.slug === stateObj.slug;
+        if (!isDuplicate) {
+          history.pushState(stateObj, '', hash);
+        }
       }
     }
+  } finally {
+    isNavigating = wasNavigating;
   }
 }
 
