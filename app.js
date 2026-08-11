@@ -275,7 +275,7 @@ function createProductCard(product) {
 
   card.addEventListener('click', () => {
     showProductDetails(product);
-    routeTo('details');
+    routeTo('details', null, product);
   });
 
   return card;
@@ -1431,7 +1431,9 @@ window.routeTo = function(route, category, product) {
   if (!isPoppingState) {
     if (route === 'details') {
       const slug = product ? (product.slug || product.id) : activeProductSlug;
-      history.pushState({ route: 'details', slug: slug }, '', '#details');
+      if (!history.state || history.state.route !== 'details' || history.state.slug !== slug) {
+        history.pushState({ route: 'details', slug: slug }, '', slug ? '#details-' + slug : '#details');
+      }
     } else if (route !== 'admin') {
       if (route === 'listing') {
         const activeCats = categoryFilterCheckboxes
@@ -1440,15 +1442,19 @@ window.routeTo = function(route, category, product) {
         const searchVal = catalogSearchInput?.value.trim().toLowerCase() || '';
         const sortVal = catalogSortSelect?.value || 'popular';
 
-        history.pushState({ 
-          route: 'listing', 
-          activeCategories: activeCats, 
-          searchTerm: searchVal, 
-          sortKey: sortVal,
-          category: category
-        }, '', '#listing');
+        if (!history.state || history.state.route !== 'listing') {
+          history.pushState({ 
+            route: 'listing', 
+            activeCategories: activeCats, 
+            searchTerm: searchVal, 
+            sortKey: sortVal,
+            category: category
+          }, '', '#listing');
+        }
       } else {
-        history.pushState({ route: route, category: category, product: product }, '', '#' + route);
+        if (!history.state || history.state.route !== route) {
+          history.pushState({ route: route, category: category, product: product }, '', '#' + route);
+        }
       }
     }
   }
@@ -1460,14 +1466,36 @@ window.routeTo = function(route, category, product) {
     history.scrollRestoration = 'manual';
   }
 
-  // Initialize baseline state on window load
+  // Initialize baseline state on window load (supporting URL sharing/direct link hashing)
   window.addEventListener('load', () => {
+    const hash = window.location.hash.substring(1);
+    let route = 'home';
+    let slug = null;
+
+    if (hash) {
+      if (hash.startsWith('details-')) {
+        route = 'details';
+        slug = hash.replace('details-', '');
+      } else if (['home', 'listing', 'details', 'wishlist', 'about', 'contact', 'admin'].includes(hash)) {
+        route = hash;
+      }
+    }
+
     if (!history.state) {
-      const hash = window.location.hash.substring(1);
-      if (hash && ['home', 'listing', 'details', 'wishlist', 'about', 'contact', 'admin'].includes(hash)) {
-        history.replaceState({ route: hash }, '', '#' + hash);
+      history.replaceState({ route: route, slug: slug }, '', window.location.hash || '#home');
+    }
+
+    // Trigger initial routing on page reload if not starting on home
+    if (route !== 'home') {
+      if (route === 'details' && slug) {
+        const interval = setInterval(() => {
+          if (productData.length > 0) {
+            clearInterval(interval);
+            showProductDetailsBySlug(slug);
+          }
+        }, 100);
       } else {
-        history.replaceState({ route: 'home' }, '', '#home');
+        routeTo(route);
       }
     }
   });
@@ -1487,7 +1515,10 @@ window.routeTo = function(route, category, product) {
           const currentState = { ...history.state, scrollPos: window.scrollY };
           history.replaceState(currentState, '', window.location.hash);
         }
-        history.pushState({ route: 'details', slug: slug }, '', '#details');
+        // Prevent duplicate details state push
+        if (!history.state || history.state.route !== 'details' || history.state.slug !== slug) {
+          history.pushState({ route: 'details', slug: slug }, '', '#details-' + slug);
+        }
       }
       return originalShowProductDetailsBySlug(slug);
     };
