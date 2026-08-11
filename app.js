@@ -1692,6 +1692,13 @@ window.updateListingHistoryState = updateListingHistoryState;
         return;
       }
 
+      // 5b. If hitting back from the listing/products page, redirect to home page
+      const isCurrentlyListing = currentActiveView && currentActiveView.id === 'listing-view';
+      if (isCurrentlyListing) {
+        navigateTo('home', {}, { replace: true });
+        return;
+      }
+
       // 6. Handle route transition
       if (event.state && event.state.route) {
         const state = event.state;
