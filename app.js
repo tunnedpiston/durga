@@ -402,6 +402,9 @@ function filterCatalog() {
 
   renderProducts(filteredProducts, catalogResultsGrid);
   updateCatalogCount(filteredProducts.length);
+  if (typeof updateListingHistoryState === 'function') {
+    updateListingHistoryState();
+  }
 }
 
 function buildSizeOptions(product) {
@@ -576,6 +579,25 @@ async function showProductDetailsBySlug(slug) {
     const res = await fetch(`${API_URL}/products/${slug}/`, { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
+      
+      // If it is a variant, resolve parent series details to populate sibling variants list
+      if (data.type === 'variant') {
+        let parentSeries = productData.find(p => p.database_id === data.series || p.id === String(data.series) || p.slug === data.series_slug);
+        if (!parentSeries && data.series_slug) {
+          try {
+            const pRes = await fetch(`${API_URL}/products/${data.series_slug}/`, { cache: 'no-store' });
+            if (pRes.ok) {
+              parentSeries = await pRes.json();
+            }
+          } catch (e) {
+            console.warn("Could not fetch parent series details:", e);
+          }
+        }
+        if (parentSeries) {
+          data.parent_series_details = parentSeries;
+        }
+      }
+
       showProductDetails(data);
       routeTo('details');
     }
@@ -659,14 +681,9 @@ function showProductDetails(product) {
   let variantsList = [];
 
   if (isVariant) {
-    // Hide details specifications panel sub-components
-    if (specDescEl) specDescEl.style.display = 'none';
-    if (specCardsEl) specCardsEl.style.display = 'none';
-    if (specVariantsEl) specVariantsEl.style.display = 'none';
-
+    // Hide details specifications panel entirely on variant-only page (no text, no badges, no CTAs)
     if (detailsInfo) {
-      detailsInfo.style.display = 'block';
-      detailsInfo.style.textAlign = 'center';
+      detailsInfo.style.display = 'none';
     }
     if (mainRow) mainRow.classList.add('variant-only-view');
     
@@ -1371,36 +1388,87 @@ function showToast(message) {
 }
 window.showToast = showToast;
 
-// Hook into routeTo to manage history on mobile
+// Unified Route History & Navigation Manager
 const originalRouteTo = window.routeTo;
 let isPoppingState = false;
 let activeProductSlug = null;
 let currentOverlay = null;
 
+// Helper to update current history state with catalog filters without pushing duplicates
+function updateListingHistoryState() {
+  if (isPoppingState) return;
+
+  if (history.state && history.state.route === 'listing') {
+    const activeCats = categoryFilterCheckboxes
+      .filter((checkbox) => checkbox.checked)
+      .map((checkbox) => checkbox.dataset.catValue);
+    const searchVal = catalogSearchInput?.value.trim().toLowerCase() || '';
+    const sortVal = catalogSortSelect?.value || 'popular';
+
+    history.replaceState({
+      ...history.state,
+      activeCategories: activeCats,
+      searchTerm: searchVal,
+      sortKey: sortVal
+    }, '', window.location.hash);
+  }
+}
+window.updateListingHistoryState = updateListingHistoryState;
+
 window.routeTo = function(route, category, product) {
   // Clear active overlay tracking to prevent logical back-navigation loops during direct routing
   currentOverlay = null;
 
+  // Save current scroll position to the page we are leaving
+  if (history.state) {
+    const currentState = { ...history.state, scrollPos: window.scrollY };
+    history.replaceState(currentState, '', window.location.hash);
+  }
+
   if (originalRouteTo) originalRouteTo(route, category, product);
   
-  // Mobile-only History Management
-  if (window.innerWidth < 768 && !isPoppingState) {
+  // Push the new state to history if not popping state (back/forward)
+  if (!isPoppingState) {
     if (route === 'details') {
-      history.pushState({ route: 'details', slug: activeProductSlug }, '', '#details');
+      const slug = product ? (product.slug || product.id) : activeProductSlug;
+      history.pushState({ route: 'details', slug: slug }, '', '#details');
     } else if (route !== 'admin') {
-      history.pushState({ route: route, category: category, product: product }, '', '#' + route);
+      if (route === 'listing') {
+        const activeCats = categoryFilterCheckboxes
+          .filter((checkbox) => checkbox.checked)
+          .map((checkbox) => checkbox.dataset.catValue);
+        const searchVal = catalogSearchInput?.value.trim().toLowerCase() || '';
+        const sortVal = catalogSortSelect?.value || 'popular';
+
+        history.pushState({ 
+          route: 'listing', 
+          activeCategories: activeCats, 
+          searchTerm: searchVal, 
+          sortKey: sortVal,
+          category: category
+        }, '', '#listing');
+      } else {
+        history.pushState({ route: route, category: category, product: product }, '', '#' + route);
+      }
     }
   }
 };
 
-// Android System Back Button & Routing History Manager (Mobile-only IIFE)
 (function() {
-  if (window.innerWidth >= 768) return; // STRICT RULE: Fix ONLY the mobile behavior.
+  // Set scrollRestoration to manual to prevent browser from doing automatic jumpy scrolls
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
 
   // Initialize baseline state on window load
   window.addEventListener('load', () => {
     if (!history.state) {
-      history.replaceState({ route: 'home' }, '', '#home');
+      const hash = window.location.hash.substring(1);
+      if (hash && ['home', 'listing', 'details', 'wishlist', 'about', 'contact', 'admin'].includes(hash)) {
+        history.replaceState({ route: hash }, '', '#' + hash);
+      } else {
+        history.replaceState({ route: 'home' }, '', '#home');
+      }
     }
   });
 
@@ -1413,14 +1481,19 @@ window.routeTo = function(route, category, product) {
   if (originalShowProductDetailsBySlug) {
     window.showProductDetailsBySlug = function(slug) {
       activeProductSlug = slug;
-      if (window.innerWidth < 768 && !isPoppingState) {
+      if (!isPoppingState) {
+        // Save current scroll position before going to details
+        if (history.state) {
+          const currentState = { ...history.state, scrollPos: window.scrollY };
+          history.replaceState(currentState, '', window.location.hash);
+        }
         history.pushState({ route: 'details', slug: slug }, '', '#details');
       }
       return originalShowProductDetailsBySlug(slug);
     };
   }
 
-  // Handle popstate (Android back button / back gesture)
+  // Handle popstate (Back button / gesture / back button click)
   window.addEventListener('popstate', (event) => {
     isPoppingState = true;
     
@@ -1457,28 +1530,53 @@ window.routeTo = function(route, category, product) {
             originalShowProductDetailsBySlug(state.slug);
           }
         } else {
+          // If returning to listing, restore its filter states
+          if (state.route === 'listing') {
+            const searchVal = state.searchTerm || '';
+            const activeCats = state.activeCategories || [];
+            const sortVal = state.sortKey || 'popular';
+
+            if (catalogSearchInput) catalogSearchInput.value = searchVal;
+            if (catalogSortSelect) catalogSortSelect.value = sortVal;
+            categoryFilterCheckboxes.forEach((checkbox) => {
+              checkbox.checked = activeCats.includes(checkbox.dataset.catValue);
+            });
+
+            if (typeof filterCatalog === 'function') {
+              filterCatalog();
+            }
+          }
+
           if (originalRouteTo) {
             originalRouteTo(state.route, state.category, state.product);
           }
         }
+
+        // Restore scroll position after a tiny timeout to let the view render
+        const targetScroll = state.scrollPos || 0;
+        setTimeout(() => {
+          window.scrollTo(0, targetScroll);
+        }, 50);
+
       } else {
         // Fallback to home if no state
         if (originalRouteTo) {
           originalRouteTo('home');
         }
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+        }, 50);
       }
     } finally {
       // Reset popping flag after a tiny timeout
       setTimeout(() => {
         isPoppingState = false;
-      }, 50);
+      }, 100);
     }
   });
 
-  // Watch for UI overlay openings and push history states automatically
+  // Watch for UI overlay openings and push history states automatically (cross-viewport)
   const overlayObserver = new MutationObserver((mutations) => {
-    if (window.innerWidth >= 768) return;
-    
     mutations.forEach((mutation) => {
       const target = mutation.target;
       let isOpen = false;
@@ -1505,10 +1603,12 @@ window.routeTo = function(route, category, product) {
 
   const startObserving = () => {
     const elMenu = document.querySelector('.mobile-nav-panel');
+    const elQuick = document.querySelector('#modal-quickview-backdrop');
     const elAdmin = document.querySelector('#modal-admin-backdrop');
     const elLightbox = document.querySelector('#image-lightbox');
 
     if (elMenu) overlayObserver.observe(elMenu, { attributes: true, attributeFilter: ['class'] });
+    if (elQuick) overlayObserver.observe(elQuick, { attributes: true, attributeFilter: ['class'] });
     if (elAdmin) overlayObserver.observe(elAdmin, { attributes: true, attributeFilter: ['class'] });
     if (elLightbox) overlayObserver.observe(elLightbox, { attributes: true, attributeFilter: ['style'] });
   };
