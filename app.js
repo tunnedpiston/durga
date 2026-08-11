@@ -599,7 +599,6 @@ async function showProductDetailsBySlug(slug) {
       }
 
       showProductDetails(data);
-      routeTo('details');
     }
   } catch (err) {
     console.error(err);
@@ -1629,7 +1628,7 @@ window.updateListingHistoryState = updateListingHistoryState;
         parentSlug = parentObj.type === 'variant' ? parentObj.series_slug : parentObj.slug;
       }
 
-      if (!isPoppingState) {
+      if (!isPoppingState && !isNavigating) {
         navigateTo('details', { 
           slug: slug, 
           parentType: parentSlug ? 'series' : 'listing', 
