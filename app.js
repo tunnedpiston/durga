@@ -606,7 +606,7 @@ async function showProductDetailsBySlug(slug) {
   }
 }
 
-function renderVariantsGallery(variants, currentVariantId) {
+function renderVariantsGallery(variants, currentVariantId, parentSlug) {
   const container = document.getElementById('related-products-carousel');
   if (!container) return;
 
@@ -641,7 +641,11 @@ function renderVariantsGallery(variants, currentVariantId) {
     }
 
     card.onclick = () => {
-      showProductDetailsBySlug(variant.slug || variant.id);
+      navigateTo('details', { 
+        slug: variant.slug || variant.id, 
+        parentType: 'series', 
+        parentSlug: parentSlug 
+      });
     };
     container.appendChild(card);
   });
@@ -696,7 +700,7 @@ function showProductDetails(product) {
       detailsCrumbCategory.innerHTML = `<span style="cursor: pointer;" onclick="routeTo('listing', '${parentCat}')">${parentCat}</span>`;
     }
     if (detailsCrumbTitle) {
-      detailsCrumbTitle.innerHTML = `<span style="cursor: pointer; color: var(--color-maroon); font-weight: 600;" onclick="showProductDetailsBySlug('${parentId}')">← Back to ${parentName} Specifications</span>`;
+      detailsCrumbTitle.innerHTML = `<span style="cursor: pointer; color: var(--color-maroon); font-weight: 600;" onclick="navigateTo('details', { slug: '${parentId}' })">← Back to ${parentName} Specifications</span>`;
     }
 
     if (parentDetails && parentDetails.variants) {
@@ -787,7 +791,8 @@ function showProductDetails(product) {
   }
 
   // Render related products/variants gallery below
-  renderVariantsGallery(variantsList, product.id);
+  const parentSlug = product.type === 'variant' ? product.series_slug : (product.slug || product.id);
+  renderVariantsGallery(variantsList, product.id, parentSlug);
 
   // Hook up CTA buttons (WhatsApp & Call)
   const whatsappCta = document.getElementById('details-whatsapp-cta');
@@ -861,50 +866,183 @@ function hideLoader() {
 
 window.setTimeout(hideLoader, 1200);
 
-function routeTo(route, category, product) {
-  closeMobileNav();
-
-  switch (route) {
-    case 'home':
-      showView('home-view');
-      break;
-    case 'listing':
+const ROUTES = {
+  'home': {
+    viewId: 'home-view',
+    title: 'Durga Catalog | Home',
+    render: () => {}
+  },
+  'listing': {
+    viewId: 'listing-view',
+    title: 'Explore Furniture Range | Durga Catalog',
+    render: (params) => {
+      const category = params?.category;
       if (category) {
         categoryFilterCheckboxes.forEach((checkbox) => {
           checkbox.checked = checkbox.dataset.catValue === category;
         });
-        filterCatalog();
+      } else if (params?.restoreFilters) {
+        // Restore listing filters from state
+        const searchVal = params.searchTerm || '';
+        const activeCats = params.activeCategories || [];
+        const sortVal = params.sortKey || 'popular';
+
+        if (catalogSearchInput) catalogSearchInput.value = searchVal;
+        if (catalogSortSelect) catalogSortSelect.value = sortVal;
+        categoryFilterCheckboxes.forEach((checkbox) => {
+          checkbox.checked = activeCats.includes(checkbox.dataset.catValue);
+        });
       } else {
+        // Reset category checkboxes
         categoryFilterCheckboxes.forEach((checkbox) => {
           checkbox.checked = false;
         });
+      }
+      if (typeof filterCatalog === 'function') {
         filterCatalog();
       }
-      showView('listing-view');
-      break;
-    case 'details':
-      if (product) showProductDetails(product);
-      showView('details-view');
-      break;
-    case 'wishlist':
-      renderWishlist();
-      showView('wishlist-view');
-      break;
-    case 'about':
-      showView('about-view');
-      break;
-    case 'contact':
-      showView('contact-view');
-      break;
-    case 'admin':
-      window.location.href = 'https://aizen222.pythonanywhere.com/admin-portal/';
-      break;
-    default:
-      console.warn('Unknown route:', route);
-      showView('home-view');
+    }
+  },
+  'details': {
+    viewId: 'details-view',
+    title: 'Product Specifications | Durga Catalog',
+    render: (params) => {
+      if (params?.product) {
+        showProductDetails(params.product);
+      } else if (params?.slug) {
+        showProductDetailsBySlug(params.slug);
+      }
+    }
+  },
+  'wishlist': {
+    viewId: 'wishlist-view',
+    title: 'My Favorites | Durga Catalog',
+    render: () => {
+      if (typeof renderWishlist === 'function') {
+        renderWishlist();
+      }
+    }
+  },
+  'about': {
+    viewId: 'about-view',
+    title: 'About Durga Furniture | Durga Catalog',
+    render: () => {}
+  },
+  'contact': {
+    viewId: 'contact-view',
+    title: 'Visit Showroom / Contact Us | Durga Catalog',
+    render: () => {}
+  }
+};
+
+let activeRouteState = null;
+let isPoppingState = false;
+let activeProductSlug = null;
+let currentOverlay = null;
+
+function navigateTo(routeKey, params, options = {}) {
+  // 1. Guard/Special case: admin route (external redirect)
+  if (routeKey === 'admin') {
+    window.location.href = 'https://aizen222.pythonanywhere.com/admin-portal/';
+    return;
+  }
+
+  const routeConfig = ROUTES[routeKey];
+  if (!routeConfig) {
+    console.warn('Unknown route:', routeKey);
+    navigateTo('home', {}, { replace: true });
+    return;
+  }
+
+  // Clear overlay tracking to prevent popup history interference
+  currentOverlay = null;
+  closeMobileNav();
+
+  // 2. Save current scroll position to active history state before leaving
+  if (activeRouteState && !isPoppingState) {
+    activeRouteState.scrollPos = window.scrollY;
+    history.replaceState(activeRouteState, '', getHashForState(activeRouteState));
+  }
+
+  // 3. Render view and update DOM / Title
+  showView(routeConfig.viewId);
+  if (routeConfig.title) {
+    document.title = routeConfig.title;
+  }
+  routeConfig.render(params);
+
+  // 4. Resolve URL hash and state properties
+  let hash = '#' + routeKey;
+  let stateSlug = null;
+  let stateParentType = null;
+  let stateParentSlug = null;
+
+  if (routeKey === 'details') {
+    stateSlug = params?.slug || (params?.product?.slug || params?.product?.id) || activeProductSlug;
+    if (stateSlug) {
+      hash = '#details-' + stateSlug;
+    }
+    stateParentType = params?.parentType || null;
+    stateParentSlug = params?.parentSlug || null;
+  }
+
+  // 5. Update history entry (unless popping state, which already moved the pointer)
+  let stateObj = { 
+    route: routeKey, 
+    slug: stateSlug,
+    parentType: stateParentType,
+    parentSlug: stateParentSlug,
+    params: params
+  };
+
+  if (routeKey === 'listing') {
+    const activeCats = categoryFilterCheckboxes
+      .filter((checkbox) => checkbox.checked)
+      .map((checkbox) => checkbox.dataset.catValue);
+    const searchVal = catalogSearchInput?.value.trim().toLowerCase() || '';
+    const sortVal = catalogSortSelect?.value || 'popular';
+
+    stateObj.activeCategories = activeCats;
+    stateObj.searchTerm = searchVal;
+    stateObj.sortKey = sortVal;
+  }
+
+  activeRouteState = stateObj;
+
+  if (!isPoppingState) {
+    if (options.replace) {
+      history.replaceState(stateObj, '', hash);
+    } else {
+      // Prevent pushing duplicate state to stack
+      const isDuplicate = history.state && 
+                          history.state.route === stateObj.route && 
+                          history.state.slug === stateObj.slug;
+      if (!isDuplicate) {
+        history.pushState(stateObj, '', hash);
+      }
+    }
   }
 }
 
+function getHashForState(state) {
+  if (!state) return '#home';
+  if (state.route === 'details' && state.slug) {
+    return '#details-' + state.slug;
+  }
+  return '#' + state.route;
+}
+
+function routeTo(route, category, product) {
+  let params = {};
+  if (route === 'listing' && category) {
+    params = { category: category };
+  } else if (route === 'details') {
+    params = { product: product, slug: product?.slug || product?.id };
+  }
+  navigateTo(route, params);
+}
+
+window.navigateTo = navigateTo;
 window.routeTo = routeTo;
 window.openMobileNav = openMobileNav;
 window.closeMobileNav = closeMobileNav;
@@ -1388,11 +1526,7 @@ function showToast(message) {
 }
 window.showToast = showToast;
 
-// Unified Route History & Navigation Manager
-const originalRouteTo = window.routeTo;
-let isPoppingState = false;
-let activeProductSlug = null;
-let currentOverlay = null;
+
 
 // Helper to update current history state with catalog filters without pushing duplicates
 function updateListingHistoryState() {
@@ -1415,50 +1549,7 @@ function updateListingHistoryState() {
 }
 window.updateListingHistoryState = updateListingHistoryState;
 
-window.routeTo = function(route, category, product) {
-  // Clear active overlay tracking to prevent logical back-navigation loops during direct routing
-  currentOverlay = null;
 
-  // Save current scroll position to the page we are leaving
-  if (history.state) {
-    const currentState = { ...history.state, scrollPos: window.scrollY };
-    history.replaceState(currentState, '', window.location.hash);
-  }
-
-  if (originalRouteTo) originalRouteTo(route, category, product);
-  
-  // Push the new state to history if not popping state (back/forward)
-  if (!isPoppingState) {
-    if (route === 'details') {
-      const slug = product ? (product.slug || product.id) : activeProductSlug;
-      if (!history.state || history.state.route !== 'details' || history.state.slug !== slug) {
-        history.pushState({ route: 'details', slug: slug }, '', slug ? '#details-' + slug : '#details');
-      }
-    } else if (route !== 'admin') {
-      if (route === 'listing') {
-        const activeCats = categoryFilterCheckboxes
-          .filter((checkbox) => checkbox.checked)
-          .map((checkbox) => checkbox.dataset.catValue);
-        const searchVal = catalogSearchInput?.value.trim().toLowerCase() || '';
-        const sortVal = catalogSortSelect?.value || 'popular';
-
-        if (!history.state || history.state.route !== 'listing') {
-          history.pushState({ 
-            route: 'listing', 
-            activeCategories: activeCats, 
-            searchTerm: searchVal, 
-            sortKey: sortVal,
-            category: category
-          }, '', '#listing');
-        }
-      } else {
-        if (!history.state || history.state.route !== route) {
-          history.pushState({ route: route, category: category, product: product }, '', '#' + route);
-        }
-      }
-    }
-  }
-};
 
 (function() {
   // Set scrollRestoration to manual to prevent browser from doing automatic jumpy scrolls
@@ -1482,10 +1573,23 @@ window.routeTo = function(route, category, product) {
     }
 
     if (!history.state) {
-      history.replaceState({ route: route, slug: slug }, '', window.location.hash || '#home');
+      if (route === 'details' && slug) {
+        // Build mock history stack: [Listing] -> [Details]
+        history.replaceState({ route: 'listing' }, '', '#listing');
+        history.pushState({ route: 'details', slug: slug }, '', '#details-' + slug);
+      } else if (route !== 'home') {
+        // Build mock history stack: [Home] -> [Route]
+        history.replaceState({ route: 'home' }, '', '#home');
+        history.pushState({ route: route }, '', '#' + route);
+      } else {
+        history.replaceState({ route: 'home' }, '', '#home');
+      }
     }
 
-    // Trigger initial routing on page reload if not starting on home
+    // Set activeRouteState to current state object
+    activeRouteState = history.state;
+
+    // Trigger initial routing on page reload
     if (route !== 'home') {
       if (route === 'details' && slug) {
         const interval = setInterval(() => {
@@ -1495,12 +1599,12 @@ window.routeTo = function(route, category, product) {
           }
         }, 100);
       } else {
-        routeTo(route);
+        navigateTo(route);
       }
     }
   });
 
-  // Hook into showProductDetailsBySlug to capture the active product details slug
+  // Hook into showProductDetailsBySlug to capture and route details properly
   let originalShowProductDetailsBySlug = window.showProductDetailsBySlug;
   if (!originalShowProductDetailsBySlug && typeof showProductDetailsBySlug !== 'undefined') {
     originalShowProductDetailsBySlug = showProductDetailsBySlug;
@@ -1509,16 +1613,20 @@ window.routeTo = function(route, category, product) {
   if (originalShowProductDetailsBySlug) {
     window.showProductDetailsBySlug = function(slug) {
       activeProductSlug = slug;
+      
+      // Determine the parent details context if we can find it in productData
+      let parentSlug = null;
+      let parentObj = productData.find(p => p.slug === slug || p.id === String(slug) || p.database_id === slug);
+      if (parentObj) {
+        parentSlug = parentObj.type === 'variant' ? parentObj.series_slug : parentObj.slug;
+      }
+
       if (!isPoppingState) {
-        // Save current scroll position before going to details
-        if (history.state) {
-          const currentState = { ...history.state, scrollPos: window.scrollY };
-          history.replaceState(currentState, '', window.location.hash);
-        }
-        // Prevent duplicate details state push
-        if (!history.state || history.state.route !== 'details' || history.state.slug !== slug) {
-          history.pushState({ route: 'details', slug: slug }, '', '#details-' + slug);
-        }
+        navigateTo('details', { 
+          slug: slug, 
+          parentType: parentSlug ? 'series' : 'listing', 
+          parentSlug: parentSlug 
+        });
       }
       return originalShowProductDetailsBySlug(slug);
     };
@@ -1533,55 +1641,74 @@ window.routeTo = function(route, category, product) {
       const menuPanel = document.querySelector('.mobile-nav-panel.open');
       if (menuPanel) {
         if (window.closeMobileNav) window.closeMobileNav();
-        currentOverlay = null;
+        if (activeRouteState) {
+          history.pushState(activeRouteState, '', getHashForState(activeRouteState));
+        }
         return;
       }
 
-      // 2. Close modals if open
-      const openModal = document.querySelector('.modal-backdrop.open');
-      if (openModal) {
-        openModal.classList.remove('open');
-        currentOverlay = null;
+      // 2. Close quickview modal if open
+      const quickModal = document.querySelector('#modal-quickview-backdrop.open');
+      if (quickModal) {
+        quickModal.classList.remove('open');
+        if (activeRouteState) {
+          history.pushState(activeRouteState, '', getHashForState(activeRouteState));
+        }
         return;
       }
 
-      // 3. Close lightbox if open
+      // 3. Close admin modal if open
+      const adminModal = document.querySelector('#modal-admin-backdrop.open');
+      if (adminModal) {
+        adminModal.classList.remove('open');
+        if (activeRouteState) {
+          history.pushState(activeRouteState, '', getHashForState(activeRouteState));
+        }
+        return;
+      }
+
+      // 4. Close lightbox if open
       const lightbox = document.getElementById('image-lightbox');
       if (lightbox && lightbox.style.display === 'flex') {
         if (window.closeLightbox) window.closeLightbox();
-        currentOverlay = null;
+        if (activeRouteState) {
+          history.pushState(activeRouteState, '', getHashForState(activeRouteState));
+        }
         return;
       }
 
-      // 4. Handle route transition
+      // 5. If hitting back from the variant details/gallery page, redirect to parent series (or listing)
+      const currentActiveView = document.querySelector('.view-panel.active');
+      const mainRow = document.querySelector('.details-main-row');
+      const isCurrentlyVariant = currentActiveView && currentActiveView.id === 'details-view' && mainRow && mainRow.classList.contains('variant-only-view');
+
+      if (isCurrentlyVariant) {
+        const parentSlug = activeRouteState?.parentSlug || 'listing';
+        if (parentSlug !== 'listing') {
+          navigateTo('details', { slug: parentSlug }, { replace: true });
+        } else {
+          navigateTo('listing', { restoreFilters: true }, { replace: true });
+        }
+        return;
+      }
+
+      // 6. Handle route transition
       if (event.state && event.state.route) {
         const state = event.state;
-        if (state.route === 'details' && state.slug) {
-          if (originalShowProductDetailsBySlug) {
-            originalShowProductDetailsBySlug(state.slug);
-          }
-        } else {
-          // If returning to listing, restore its filter states
-          if (state.route === 'listing') {
-            const searchVal = state.searchTerm || '';
-            const activeCats = state.activeCategories || [];
-            const sortVal = state.sortKey || 'popular';
-
-            if (catalogSearchInput) catalogSearchInput.value = searchVal;
-            if (catalogSortSelect) catalogSortSelect.value = sortVal;
-            categoryFilterCheckboxes.forEach((checkbox) => {
-              checkbox.checked = activeCats.includes(checkbox.dataset.catValue);
-            });
-
-            if (typeof filterCatalog === 'function') {
-              filterCatalog();
-            }
-          }
-
-          if (originalRouteTo) {
-            originalRouteTo(state.route, state.category, state.product);
-          }
+        const params = state.params || {};
+        
+        if (state.route === 'listing') {
+          params.restoreFilters = true;
+          params.searchTerm = state.searchTerm;
+          params.activeCategories = state.activeCategories;
+          params.sortKey = state.sortKey;
+        } else if (state.route === 'details') {
+          params.slug = state.slug;
+          params.parentType = state.parentType;
+          params.parentSlug = state.parentSlug;
         }
+
+        navigateTo(state.route, params, { replace: true });
 
         // Restore scroll position after a tiny timeout to let the view render
         const targetScroll = state.scrollPos || 0;
@@ -1591,62 +1718,15 @@ window.routeTo = function(route, category, product) {
 
       } else {
         // Fallback to home if no state
-        if (originalRouteTo) {
-          originalRouteTo('home');
-        }
+        navigateTo('home', {}, { replace: true });
         setTimeout(() => {
           window.scrollTo(0, 0);
         }, 50);
       }
     } finally {
-      // Reset popping flag after a tiny timeout
       setTimeout(() => {
         isPoppingState = false;
       }, 100);
     }
   });
-
-  // Watch for UI overlay openings and push history states automatically (cross-viewport)
-  const overlayObserver = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      const target = mutation.target;
-      let isOpen = false;
-
-      if (mutation.attributeName === 'class') {
-        isOpen = target.classList.contains('open');
-      } else if (mutation.attributeName === 'style') {
-        isOpen = target.style.display === 'flex';
-      }
-
-      if (isOpen) {
-        if (!isPoppingState && currentOverlay !== target) {
-          currentOverlay = target;
-          history.pushState({ overlay: true }, '', window.location.hash);
-        }
-      } else {
-        if (!isPoppingState && currentOverlay === target) {
-          currentOverlay = null;
-          history.back();
-        }
-      }
-    });
-  });
-
-  const startObserving = () => {
-    const elMenu = document.querySelector('.mobile-nav-panel');
-    const elQuick = document.querySelector('#modal-quickview-backdrop');
-    const elAdmin = document.querySelector('#modal-admin-backdrop');
-    const elLightbox = document.querySelector('#image-lightbox');
-
-    if (elMenu) overlayObserver.observe(elMenu, { attributes: true, attributeFilter: ['class'] });
-    if (elQuick) overlayObserver.observe(elQuick, { attributes: true, attributeFilter: ['class'] });
-    if (elAdmin) overlayObserver.observe(elAdmin, { attributes: true, attributeFilter: ['class'] });
-    if (elLightbox) overlayObserver.observe(elLightbox, { attributes: true, attributeFilter: ['style'] });
-  };
-
-  if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', startObserving);
-  } else {
-    startObserving();
-  }
 })();
